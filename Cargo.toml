@@ -6,5 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+argon2 = "0.5.2"
 axum = "0.6.20"
+axum-login = { version = "0.6.0", features = ["sqlx", "sqlite"] }
+rand = { version = "0.8.5", features = ["min_const_gen"]}
+serde = "1.0.188"
+serde_json = "1.0.106"
+sqlx = { version = "0.6.3", features = ["sqlite"] }
 tokio = { version = "1.32.0", features = ["full"] }
