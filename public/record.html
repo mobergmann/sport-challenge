@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New: Sports Challenge</title>
+</head>
+
+<body>
+<fieldset>
+    <legend>New Activity</legend>
+    <form>
+        <div>
+            <label for="amount">amount</label>
+            <input type="number" placeholder="amount" id="amount">
+        </div>
+
+        <div>
+            <label for="activity_type">Activity Type</label>
+            <select id="activity_type">
+                <option value="PushUps">Push-Ups</option>
+            </select>
+
+        </div>
+
+        <div>
+            <label for="start_time">Start DateTime</label>
+            <input type="datetime-local" id="start_time">
+            <div id="start_time-timezone-container"></div>
+        </div>
+
+        <!--
+        <div>
+            <label for="end_time">End DateTime</label>
+            <input type="datetime-local" id="end_time">
+            <div id="end_time-timezone-container"></div>
+        </div>
+        -->
+
+        <div>
+            <input type="button" value="Submit" id="submit">
+        </div>
+    </form>
+</fieldset>
+
+<script type="module" src="/record.js"></script>
+</body>
+
+</html>

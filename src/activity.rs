@@ -24,3 +24,11 @@ pub struct BareActivity {
     pub start_time: DateTime<Local>,
     pub end_time: DateTime<Local>,
 }
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct StringBareActivity {
+    pub amount: i64,
+    pub activity_type: ActivityType,
+    pub start_time: String,
+    pub end_time: String,
+}

@@ -1,4 +1,4 @@
-use crate::activity::BareActivity;
+use crate::activity::{BareActivity, StringBareActivity};
 use crate::storage::Error;
 use crate::user::{BareUser, User};
 use crate::{hasher, storage};
@@ -7,6 +7,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
 use axum_login::SqliteStore;
+use chrono::{DateTime, ParseResult, Utc};
 
 type AuthContext = axum_login::extractors::AuthContext<i64, User, SqliteStore<User>>;
 
@@ -80,9 +81,32 @@ pub async fn get_activities(mut auth: AuthContext) -> impl IntoResponse {
 
 pub async fn new_activity(
     mut auth: AuthContext,
-    Json(payload): Json<BareActivity>,
+    Json(payload): Json<StringBareActivity>,
 ) -> impl IntoResponse {
-    let activity = match storage::new_activity(&payload, &auth.current_user.unwrap()).await {
+    let start_time = match DateTime::parse_from_rfc3339(payload.start_time.as_str()) {
+        Ok(time) => time,
+        Err(_) => {
+            return (StatusCode::BAD_REQUEST, Json("not a valid rfc3339 date string string")).into_response();
+        }
+    };
+    let end_time = match DateTime::parse_from_rfc3339(payload.end_time.as_str()) {
+        Ok(time) => time,
+        Err(_) => {
+            return (StatusCode::BAD_REQUEST, Json("not a valid rfc3339 date string string")).into_response();
+        }
+    };
+    if end_time < start_time {
+        return (StatusCode::BAD_REQUEST, Json("the end time point of the activity cannot be later than the beginning time point of the activity")).into_response();
+    }
+
+    let converted_activity = BareActivity {
+        amount: payload.amount,
+        activity_type: payload.activity_type,
+        start_time: DateTime::from(start_time),
+        end_time: DateTime::from(end_time),
+    };
+
+    let activity = match storage::new_activity(&converted_activity, &auth.current_user.unwrap()).await {
         Ok(activity) => activity,
         Err(_) => {
             return (
@@ -97,7 +121,7 @@ pub async fn new_activity(
 
 pub async fn edit_activity(
     mut auth: AuthContext,
-    Json(payload): Json<BareActivity>,
+    Json(payload): Json<StringBareActivity>,
 ) -> impl IntoResponse {
     (
         StatusCode::NOT_IMPLEMENTED,

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home: Sports Challenge</title>
+</head>
+
+<body>
+<h1>Home</h1>
+
+<button onclick="window.location = '/record.html'">New Activity</button>
+
+<div id="comparison" class="container">
+    <h2>Comparison</h2>
+    <div id="graph-comparison">
+        <canvas id="graph-comparison-canvas" style="width:100%;"></canvas>
+    </div>
+
+    <div class="comparison-list">
+        <!-- todo: top 3 people -->
+        <!-- todo: load more button -->
+    </div>
+</div>
+
+<div id="log" class="container">
+    <h2>Log</h2>
+    <div class="container">
+        <!-- todo: last 5 activities -->
+        <!-- todo: load more button -->
+    </div>
+</div>
+
+<!-- todo: npm -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="home.js"></script>
+</body>
+
+</html>
