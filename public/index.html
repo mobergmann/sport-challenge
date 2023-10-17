@@ -4,121 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SP-frontend</title>
-    <script src="script.js"></script>
+    <title>Sports Challenge</title>
 </head>
 
 <body>
-    <fieldset>
-        <legend>auth</legend>
+<header>
+    <h1>Sport Challenge</h1>
+</header>
 
-        <fieldset>
-            <legend>Sign In</legend>
+<article>
+    <h2>Create a new Account or LogIn</h2>
+    <button onclick="location.href = '/auth/sign_up.html';">Sign Up</button>
+    <button onclick="location.href = '/auth/sign_in.html';">Sign In</button>
+</article>
 
-            <form id="sign_in-form">
-                <input type="text" placeholder="name" id="sign_in-username">
-                <input type="password" placeholder="password" id="sign_in-password">
-                <br>
-                <input type="button" value="Sign In" onclick="sign_in()">
-                <input type="reset">
-            </form>
-        </fieldset>
+<article>
+    <h2>Already loogged in?</h2>
+    <p>When you are logged in, go to home to see your data.</p>
+    <button onclick="window.location = '/home.html'">Go to Home</button>
+</article>
 
-        <fieldset>
-            <legend>Sign Out</legend>
+<article>
+    <h2>Disclaimer</h2>
+    <p>This App is not even in pre alpha. All your data may be whiped at any point.<br>
+        Don't rely on this app to store all your data nor to store it securely.</p>
+</article>
 
-            <form id="sign_out-form">
-                <input type="button" value="Sign Out" onclick="sign_out()">
-            </form>
-        </fieldset>
+<article>
+    <h2>Comare</h2>
+    <p>Challenge yourself by comparing your performance with your friends.</p>
+</article>
 
-        <fieldset>
-            <legend>Sign Up</legend>
-
-            <form id="sign_up-form">
-                <input type="text" placeholder="name" id="sign_up-username">
-                <input type="password" placeholder="password" id="sign_up-password">
-                <input type="password" placeholder="password" id="sign_up-password2">
-                <br>
-                <input type="button" value="Sign Up" onclick="sign_up()">
-                <input type="reset">
-            </form>
-        </fieldset>
-    </fieldset>
-
-    <fieldset>
-        <legend>activities</legend>
-
-        <fieldset>
-            <legend>get activity</legend>
-            <form id="get_activity-form">
-                <input type="number" placeholder="id" id="activity-id">
-                <br>
-                <input type="reset">
-                <input type="button" value="Submit" onclick="get_activity()">
-            </form>
-        </fieldset>
-
-        <fieldset>
-            <legend>get all activities</legend>
-            <form id="get_all_activities-form">
-                <input type="button" value="Submit" onclick="get_all_activities()">
-            </form>
-        </fieldset>
-
-        <fieldset>
-            <legend>new activity</legend>
-            <form id="new_activity-form">
-                <label for="new_activity-amount">amount</label>
-                <input type="number" placeholder="amount" id="new_activity-amount">
-                <br>
-                <label for="new_activity-activity_type">Activity Type</label>
-                <select id="new_activity-activity_type">
-                    <option value="PushUps">Push-Ups</option>
-                </select>
-                <br>
-                <label for="new_activity-start_time">Start DateTime</label>
-                <input type="datetime-local" id="new_activity-start_time">
-                <br>
-                <label for="new_activity-end_time">End DateTime</label>
-                <input type="datetime-local" id="new_activity-end_time">
-                <br>
-                <input type="button" value="Submit" onclick="new_activity()">
-            </form>
-        </fieldset>
-
-        <fieldset>
-            <legend>edit activity</legend>
-            <form id="edit_activity-form">
-                <label for="edit_activity-amount">amount</label>
-                <input type="number" placeholder="amount" id="edit_activity-amount">
-                <br>
-                <label for="edit_activity-activity_type">Activity Type</label>
-                <select id="edit_activity-activity_type">
-                    <option value="PushUps">Push-Ups</option>
-                </select>
-                <br>
-                <label for="edit_activity-start_time">Start DateTime</label>
-                <input type="datetime-local" id="edit_activity-start_time">
-                <br>
-                <label for="edit_activity-end_time">End DateTime</label>
-                <input type="datetime-local" id="edit_activity-end_time">
-                <br>
-                <input type="button" value="Submit" onclick="edit_activity()">
-
-            </form>
-        </fieldset>
-
-        <fieldset>
-            <legend>delete activity</legend>
-            <form id="delete_activity-form">
-                <label for="delete_activity-id">ID</label>
-                <input type="number" placeholder="id" id="delete_activity-id">
-                <br>
-                <input type="button" value="Submit" onclick="delete_activity()">
-            </form>
-        </fieldset>
-    </fieldset>
+<article>
+    <h2>Keep track</h2>
+    <p>Keep a log of your activities.</p>
+</article>
 </body>
 
 </html>
