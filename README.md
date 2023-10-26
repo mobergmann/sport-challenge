@@ -8,5 +8,5 @@ If you are using another container frontend, like docker, change podman to docke
 
 If you want to run the container, enter the following command:
 ```
-docker run -d -p 3000:3000 --name sport-challenge localhost/sport-challenge-image
+podman run -d -p <host-port>:3000 --name sport-challenge localhost/sport-challenge-image
 ```
