@@ -1,4 +1,4 @@
-export const BASE_URL = "http://127.0.0.1:3000/v1";
+export const BASE_URL = "/v1";
 export const BASE_AUTH_URL = `${BASE_URL}/auth`;
 export const BASE_ACTIVITIES_URL = `${BASE_URL}/activities`;
 
