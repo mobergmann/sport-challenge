@@ -24,13 +24,13 @@ pub async fn frontend_router() -> Router {
     Router::new().nest_service("/", ServeDir::new("public"))
 }
 
-pub async fn backend_rouer() -> Router {
+pub async fn backend_router() -> Router {
     let secret = rand::thread_rng().gen::<[u8; 64]>();
 
     let session_store = MemoryStore::new();
     let session_layer = SessionLayer::new(session_store, &secret)
         .with_secure(false)
-        .with_same_site_policy(SameSite::None);
+        .with_same_site_policy(SameSite::Lax);
 
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
 
@@ -54,7 +54,6 @@ pub async fn backend_rouer() -> Router {
         .route("/v1/auth/sign_up", post(sign_up))
         .route("/v1/auth/sign_in", post(sign_in))
         .route("/v1/auth/sign_out", get(sign_out))
-        // .layer(CorsLayer::very_permissive())
         .layer(auth_layer)
         .layer(session_layer)
 }
