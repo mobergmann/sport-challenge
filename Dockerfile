@@ -2,11 +2,18 @@ FROM ubuntu:latest
 
 LABEL org.opencontainers.image.source=https://github.com/mobergmann/sport-challenge
 
-COPY ./sqlite/ /src/sqlite
-COPY ./public/ /src/public
+# create base folder
+RUN mkdir /src
+
+# copy over all files neccesary for the execution of the program
 COPY ./target/release/sport-challenge /src/sport-challenge
+COPY ./public/ /src/public
+# create volume and a symbolic link to the database folder
+VOLUME /data
+RUN ln -s /data /src/sqlite
+COPY ./sqlite/ /data
 
 WORKDIR /src
+# make the program executalbe
 RUN chmod 555 sport-challenge
-
 CMD "./sport-challenge"
