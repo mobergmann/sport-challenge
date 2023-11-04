@@ -1,5 +1,7 @@
-use sqlx::sqlite::SqlitePoolOptions;
 use crate::activity::{Activity, BareActivity};
+use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
+use sqlx::{ConnectOptions, Executor};
+use std::str::FromStr;
 
 use crate::hasher;
 use crate::user::{BareUser, User};
@@ -10,7 +12,52 @@ pub const DB_URI: &str = "sqlite/data.db";
 pub enum Error {
     ElementNotFound,
     InternalError,
-    NotImplemented
+    NotImplemented,
+}
+
+pub async fn init() -> Result<(), Error> {
+    let connection: SqliteConnectOptions =
+        match SqliteConnectOptions::from_str(&format!("sqlite://{}", DB_URI)) {
+            Ok(connection) => connection,
+            Err(_) => return Err(Error::InternalError),
+        };
+
+    let mut connection = match connection.create_if_missing(true).connect().await {
+        Ok(connection) => connection,
+        Err(_) => return Err(Error::InternalError),
+    };
+
+    // create users table
+    match connection.execute(
+        "CREATE TABLE IF NOT EXISTS 'users' (
+        'id'	INTEGER UNIQUE,
+        'name'	TEXT NOT NULL UNIQUE,
+        'password_hash'	TEXT NOT NULL UNIQUE,
+        PRIMARY KEY('id' AUTOINCREMENT))")
+        .await
+    {
+        Ok(_) => {}
+        Err(_) => return Err(Error::InternalError), // todo return e
+    };
+
+    // create activities table
+    match connection.execute(
+        "CREATE TABLE IF NOT EXISTS 'activities' (
+    	'id'	INTEGER UNIQUE,
+    	'start_time'	TEXT NOT NULL,
+    	'end_time'	TEXT NOT NULL,
+    	'amount'	INTEGER NOT NULL,
+    	'activity_type'	TEXT NOT NULL,
+    	'author_id'	INTEGER NOT NULL,
+    	FOREIGN KEY('author_id') REFERENCES 'users'('id'),
+    	PRIMARY KEY('id' AUTOINCREMENT))")
+        .await
+    {
+        Ok(_) => {}
+        Err(_) => return Err(Error::InternalError), // todo return e
+    };
+
+    Ok(())
 }
 
 pub async fn insert_new_user(user: &BareUser) -> Result<User, Error> {
@@ -50,7 +97,6 @@ pub async fn user_exists(name: &String) -> bool {
         Err(_) => false,
     }
 }
-
 
 pub async fn get_activity(id: i64) -> Result<Activity, Error> {
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
