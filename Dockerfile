@@ -11,7 +11,6 @@ COPY ./public/ /src/public
 # create volume and a symbolic link to the database folder
 VOLUME /data
 RUN ln -s /data /src/sqlite
-COPY ./sqlite/ /data
 
 WORKDIR /src
 # make the program executalbe
