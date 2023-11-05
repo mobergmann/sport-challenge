@@ -45,7 +45,7 @@ console.debug(activities_per_user);
 
 // display the chart
 {
-    const x_axis_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const x_axis_labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     
     // prepare for each user the y-Axis
     let push_up_per_day = [];
