@@ -59,28 +59,8 @@ console.debug(activities_per_user);
             }
             
             // sum the activity's amount to its corresponding weekday
-            if (activities[i].start_time.getDay() === 1) {
-                // Monday
-                amounts[0] += activities[i].amount;
-            } else if (activities[i].start_time.getDay() === 2) {
-                // Tuesday
-                amounts[1] += activities[i].amount;
-            } else if (activities[i].start_time.getDay() === 3) {
-                // Wednesday
-                amounts[2] += activities[i].amount;
-            } else if (activities[i].start_time.getDay() === 4) {
-                // Thursday
-                amounts[3] += activities[i].amount;
-            } else if (activities[i].start_time.getDay() === 5) {
-                // Friday
-                amounts[4] += activities[i].amount;
-            } else if (activities[i].start_time.getDay() === 6) {
-                // Saturday
-                amounts[5] += activities[i].amount;
-            } else if (activities[i].start_time.getDay() === 7) {
-                // Sunday
-                amounts[6] += activities[i].amount;
-            }
+            const activity_weekday = activities[i].start_time.getDay();
+            amounts[activity_weekday] += activities[i].amount;
         }
         
         push_up_per_day.push({
