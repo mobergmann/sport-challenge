@@ -5,36 +5,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home: Sports Challenge</title>
+    <link rel="stylesheet" type="text/css" href="style/home.css" media="screen"/>
 </head>
 
 <body>
-<h1>Home</h1>
 
-<button onclick="window.location = '/record.html'">New Activity</button>
+<header>
+    <h1>Home</h1>
+</header>
 
-<div id="comparison" class="container">
-    <h2>Comparison</h2>
-    <div id="graph-comparison">
-        <canvas id="graph-comparison-canvas" style="width:100%;"></canvas>
+<main>
+    <aside class="controlls">
+        <button onclick="window.location = '/record.html'">
+            <img src="images/add_button.svg" alt="Add Activitiy" width="50rem" height="50rem">
+        </button>
+    </aside>
+
+    <article>
+        <h2>Comparison</h2>
+        <div id="graph-comparison">
+            <canvas id="graph-comparison-canvas" style="width:100%;"></canvas>
+        </div>
+
+        <div>
+            <!-- Here goes the ranking of the first three users and your place via the controller -->
+            <!-- todo: top 3 people -->
+            <!-- todo: you'r place -->
+        </div>
+    </article>
+
+    <article>
+        <h2>Log</h2>
+        <!-- Here goes the log of the users via the controller -->
+        <ul id="ref-log-list"></ul>
+    </article>
+</main>
+
+<template id="template-log">
+    <div class="logentry">
+        <div class="logentry-d1">
+            <div class="logentry-d2">
+                <div class="logentry-place">
+                    #<div id="template-log-place"></div>
+                </div>
+
+                <div class="logentry-username">
+                    <div id="template-log-username"></div>
+                </div>
+            </div>
+
+            <div class="logentry-amount">
+                <div id="template-log-amount"></div>
+            </div>
+        </div>
+
+        <div>
+            <label>Activities</label>
+            <ul id="template-log-activities">
+                <!-- Here goes the activities constructed from the template -->
+            </ul>
+            <button class="button-down">
+                <img src="images/down.svg" alt="Show Activities" width="15rem" height="15rem">
+            </button>
+            <button class="button-up">
+                <img src="images/up.svg" alt="Hide Activities" width="15rem" height="15rem">
+            </button>
+        </div>
     </div>
+</template>
 
-    <div class="comparison-list">
-        <!-- todo: top 3 people -->
-        <!-- todo: load more button -->
+<template id="template-log-activity">
+    <div>
+        <div>
+            <label>
+                Start Time
+                <input type="datetime-local" id="template-log-activity-start-time" disabled>
+            </label>
+        </div>
+        <div>
+            <label>
+                Duration
+                <input type="number" id="template-log-activity-duration" disabled>
+            </label>
+        </div>
+        <div>
+            <label>
+                Amount
+                <input type="number" id="template-log-activity-amount" disabled>
+            </label>
+        </div>
     </div>
-</div>
+</template>
 
-<div id="log" class="container">
-    <h2>Log</h2>
-    <div class="container">
-        <!-- todo: last 5 activities -->
-        <!-- todo: load more button -->
-    </div>
-</div>
+<footer></footer>
 
 <!-- todo: npm -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module" src="home.js"></script>
+
 </body>
 
 </html>
