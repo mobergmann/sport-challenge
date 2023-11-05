@@ -6,7 +6,7 @@ use std::str::FromStr;
 use crate::hasher;
 use crate::user::{BareUser, User};
 
-pub const DB_URI: &str = "sqlite/data.db";
+pub const DB_URI: &str = "data.db";
 
 /// Error codes for the storage module
 pub enum Error {
@@ -108,7 +108,7 @@ pub async fn get_activity(id: i64) -> Result<Activity, Error> {
     {
         Ok(activity) => activity,
         Err(sqlx::Error::RowNotFound) => return Err(Error::ElementNotFound),
-        Err(e) => {
+        Err(_) => {
             return Err(Error::InternalError);
         }, // todo return e
     };
