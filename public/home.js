@@ -170,19 +170,35 @@ function init_log(activities_per_user) {
     let place = 1;
     for (const [author_id, activities] of activities_per_user) {
         const clone = template.content.cloneNode(true);
+
+        // add collapsable functionality to buttons
+        let button_down = clone.querySelector("#logentry-i1");
+        button_down.id = `logentry-down-${author_id}`;
+        let button_up = clone.querySelector("#logentry-i3");
+        button_up.id = `logentry-up-${author_id}`;
+        let activities_container = clone.querySelector("#logentry-i2");
+        activities_container.id = `logentry-container-${author_id}`;
+        button_down.onclick = () => {
+            button_down.style.display = "none";
+            activities_container.style.display = "block";
+        };
+        button_up.onclick = () => {
+            button_down.style.display = "block";
+            activities_container.style.display = "none";
+        };
+
         // add the data to the log entry
         clone.querySelector("#template-log-place").innerHTML = place;
         clone.querySelector("#template-log-username").innerHTML = author_id;
-        clone.querySelector("#template-log-amount").innerHTML = activities.sum("amount"); // todo: issue
-                                                                 // (a, b) => a.amount + b.amount,
+        clone.querySelector("#template-log-amount").innerHTML = activities.sum("amount");
         // add the activities to the log entry
         let activities_list = clone.querySelector("#template-log-activities");
         let activity_template = document.querySelector("#template-log-activity");
         for (const activity of activities) {
             const clone = activity_template.content.cloneNode(true);
-            clone.querySelector("#template-log-activity-start-time").value = activity.start_time.toISOString().slice(0,16);
-            clone.querySelector("#template-log-activity-duration").value = activity.end_time - activity.start_time;
-            clone.querySelector("#template-log-activity-amount").value = activity.amount;
+            clone.querySelector("#template-log-activity-starttime").value = activity.start_time.toISOString().slice(0,16);
+            clone.querySelector("#template-log-activity-duration").innerHTML = activity.end_time - activity.start_time;
+            clone.querySelector("#template-log-activity-amount").innerHTML = activity.amount;
 
             activities_list.appendChild(clone);
         }

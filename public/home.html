@@ -60,39 +60,38 @@
         </div>
 
         <div>
-            <label>Activities</label>
-            <ul id="template-log-activities">
-                <!-- Here goes the activities constructed from the template -->
-            </ul>
-            <button class="button-down">
+            <button class="log-activities-button-down" id="logentry-i1">
                 <img src="images/down.svg" alt="Show Activities" width="15rem" height="15rem">
             </button>
-            <button class="button-up">
-                <img src="images/up.svg" alt="Hide Activities" width="15rem" height="15rem">
-            </button>
+
+            <div class="log-activities"  id="logentry-i2">
+                <ul id="template-log-activities">
+                    <!-- Here goes the activities constructed from the template -->
+                </ul>
+
+                <button class="log-activities-button-up" id="logentry-i3">
+                    <img src="images/up.svg" alt="Hide Activities" width="15rem" height="15rem">
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <template id="template-log-activity">
-    <div>
-        <div>
+    <div class="logactivity">
+        <div class="logactivity-starttime logactivity-propertie">
             <label>
-                Start Time
-                <input type="datetime-local" id="template-log-activity-start-time" disabled>
+                Start Time:&nbsp;
+                <input type="datetime-local" id="template-log-activity-starttime" disabled>
             </label>
         </div>
-        <div>
-            <label>
-                Duration
-                <input type="number" id="template-log-activity-duration" disabled>
-            </label>
+        <div class="logactivity-duration logactivity-propertie">
+            Duration:&nbsp;
+            <div id="template-log-activity-duration"></div>
         </div>
-        <div>
-            <label>
-                Amount
-                <input type="number" id="template-log-activity-amount" disabled>
-            </label>
+        <div class="logactivity-amount logactivity-propertie">
+            Amount:&nbsp;
+            <div id="template-log-activity-amount"></div>
         </div>
     </div>
 </template>

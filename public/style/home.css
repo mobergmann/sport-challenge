@@ -3,6 +3,10 @@ body {
     margin: auto;
 }
 
+header {
+    margin: 1rem;
+}
+
 main {
     margin: 1rem;
     margin-bottom: 5em; /* space for the add activiy button*/
@@ -41,4 +45,30 @@ main {
     display: flex;
     justify-content: flex-end;
     margin-right: 1rem;
+}
+
+.log-activities {
+    display: none;
+}
+.logactivity {
+    padding: 0.1rem;
+    border: 1px solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.logactivity-propertie {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 1rem;
+}
+.logactivity-starttime {
+
+}
+.logactivity-duration {
+
+}
+.logactivity-amount {
+
 }
