@@ -10,7 +10,8 @@ COPY ./target/release/sport-challenge /src/sport-challenge
 COPY ./public/ /src/public
 # create volume and a symbolic link to the database folder
 VOLUME /data
-RUN ln -s /data /src/sqlite
+RUN touch /data/data.db
+RUN ln -s /data/data.db /src/data.db
 
 WORKDIR /src
 # make the program executalbe
