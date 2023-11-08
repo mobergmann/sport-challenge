@@ -90,6 +90,22 @@ pub async fn get_user(name: &String) -> Result<User, Error> {
     Ok(user)
 }
 
+pub async fn get_user_by_id(id: &i64) -> Result<User, Error> {
+    let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+
+    let user: User = match sqlx::query_as("select * from users where id = $1")
+        .bind(id)
+        .fetch_one(&pool)
+        .await
+    {
+        Ok(user) => user,
+        Err(sqlx::Error::RowNotFound) => return Err(Error::ElementNotFound),
+        Err(_) => return Err(Error::InternalError), // todo return e
+    };
+
+    Ok(user)
+}
+
 pub async fn user_exists(name: &String) -> bool {
     let user = get_user(name).await;
     match user {

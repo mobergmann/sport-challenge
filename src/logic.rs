@@ -1,6 +1,6 @@
 use crate::activity::{BareActivity, StringBareActivity};
 use crate::storage::Error;
-use crate::user::{BareUser, User};
+use crate::user::{BareUser, PublicUser, User};
 use crate::{hasher, storage};
 use axum::extract::Path;
 use axum::http::StatusCode;
@@ -134,6 +134,28 @@ pub async fn delete_activity(
         }
     };
     (StatusCode::OK, Json(activity)).into_response()
+}
+
+pub async fn get_user(mut auth: AuthContext, Path(username): Path<String>) -> impl IntoResponse
+{
+    let user = match storage::get_user(&username).await {
+        Ok(user) => user,
+        Err(Error::ElementNotFound) => return (StatusCode::NO_CONTENT).into_response(),
+        Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
+    };
+
+    (StatusCode::OK, Json(PublicUser::from(user))).into_response()
+}
+
+pub async fn get_user_by_id(mut auth: AuthContext, Path(user_id): Path<i64>) -> impl IntoResponse
+{
+    let user = match storage::get_user_by_id(&user_id).await {
+        Ok(user) => user,
+        Err(Error::ElementNotFound) => return (StatusCode::NO_CONTENT).into_response(),
+        Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
+    };
+
+    (StatusCode::OK, Json(PublicUser::from(user))).into_response()
 }
 
 pub async fn get_account() {}
