@@ -1,22 +1,5 @@
 import {BASE_ACTIVITIES_URL} from "./variables.js";
-
-async function do_request(request) {
-    return await fetch(request)
-        .then((response) => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                throw new Error("Something went wrong on API server!");
-            }
-        })
-        .then((response) => {
-            return response;
-        })
-        .catch((error) => {
-            console.error(error);
-            throw error;
-        });
-}
+import {do_request} from "./requests.js"
 
 export async function get_activity(id) {
     const request = new Request(`${BASE_ACTIVITIES_URL}/${id}`, {

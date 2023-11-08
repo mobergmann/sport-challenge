@@ -3,6 +3,7 @@ use crate::user::User;
 
 use crate::storage::DB_URI;
 use axum::http::StatusCode;
+use axum::response::IntoResponse;
 use axum::routing::{delete, get, post};
 use axum::Router;
 use axum_login::axum_sessions::async_session::MemoryStore;
@@ -13,11 +14,8 @@ use sqlx::sqlite::SqlitePoolOptions;
 use tower_http::services::ServeDir;
 
 #[allow(clippy::unused_async)]
-async fn handle_error() -> (StatusCode, &'static str) {
-    (
-        StatusCode::INTERNAL_SERVER_ERROR,
-        "Something went wrong accessing static files...",
-    )
+async fn handle_error() -> impl IntoResponse {
+    (StatusCode::INTERNAL_SERVER_ERROR).into_response()
 }
 
 pub async fn frontend_router() -> Router {
@@ -42,6 +40,9 @@ pub async fn backend_router() -> Router {
         .route("/v1/account", get(get_account))
         .route("/v1/account/edit", post(edit_account))
         .route("/v1/account", delete(delete_account))
+        // user
+        .route("/v1/user/id/:id", get(get_user_by_id))
+        .route("/v1/user/:username", get(get_user))
         // activity routes
         .route("/v1/activities/:id", get(get_activity))
         .route("/v1/activities", get(get_activities))

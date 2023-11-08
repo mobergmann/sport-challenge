@@ -2,6 +2,8 @@ use axum_login::secrecy::SecretVec;
 use axum_login::AuthUser;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
+use std::convert::From;
+use std::convert::Into;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, FromRow)]
 pub struct User {
@@ -26,4 +28,19 @@ impl AuthUser<i64> for User {
 pub struct BareUser {
     pub name: String,
     pub password: String,
+}
+
+#[derive(Serialize)]
+pub struct PublicUser {
+    pub id: i64,
+    pub name: String,
+}
+
+impl From<User> for PublicUser {
+    fn from(user: User) -> Self {
+        Self {
+            id: user.id,
+            name: user.name,
+        }
+    }
 }

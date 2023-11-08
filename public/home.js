@@ -1,4 +1,5 @@
 import {get_all_activities} from "./scripts/activity.js";
+import {get_user_by_id} from "./scripts/user.js";
 
 /// @source: https://stackoverflow.com/a/31810991/11186407
 Date.prototype.getWeek = function() {
@@ -91,8 +92,18 @@ async function prepare_activities_data() {
     return sorted_activities_per_user;
 }
 
+/// Download for each user in the activities_per_user map the user object
+async function prepare_user_by_id(activities_per_user) {
+    let user_by_id = new Map();
+    for (const [author_id, _] of activities_per_user) {
+        let user = await get_user_by_id(author_id);
+        user_by_id.set(author_id, user);
+    }
+    return user_by_id;
+}
+
 /// display the activities in a chart
-function init_chart(activities_per_user) {
+function init_chart(activities_per_user, user_by_id) {
     // display the chart
     const x_axis_labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -114,7 +125,7 @@ function init_chart(activities_per_user) {
 
         activities_per_day.push({
             // todo: replace with author name
-            label: author_id,
+            label: user_by_id.get(author_id).name,
             data: amounts,
             fill: false,
             // todo: random color
@@ -157,7 +168,7 @@ function init_chart(activities_per_user) {
     });
 }
 
-function init_log(activities_per_user) {
+function init_log(activities_per_user, user_by_id) {
     // test to see if the browser supports the HTML template element by checking
     // for the presence of the template element's content attribute.
     if (!("content" in document.createElement("template"))) {
@@ -189,7 +200,7 @@ function init_log(activities_per_user) {
 
         // add the data to the log entry
         clone.querySelector("#template-log-place").innerHTML = place;
-        clone.querySelector("#template-log-username").innerHTML = author_id;
+        clone.querySelector("#template-log-username").innerHTML = user_by_id.get(author_id).name;
         clone.querySelector("#template-log-amount").innerHTML = activities.sum("amount");
         // add the activities to the log entry
         let activities_list = clone.querySelector("#template-log-activities");
@@ -211,10 +222,11 @@ function init_log(activities_per_user) {
 
 
 async function main() {
-    let data = await prepare_activities_data();
+    let activities_per_user = await prepare_activities_data();
+    let user_by_id = await prepare_user_by_id(activities_per_user);
 
-    init_chart(data);
-    init_log(data);
+    init_chart(activities_per_user, user_by_id);
+    init_log(activities_per_user, user_by_id);
 }
 
 await main();
