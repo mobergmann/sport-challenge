@@ -2,6 +2,8 @@ export const BASE_URL = "/v1";
 export const BASE_AUTH_URL = `${BASE_URL}/auth`;
 export const BASE_ACTIVITIES_URL = `${BASE_URL}/activities`;
 
+export const BASE_USER_URL = `${BASE_URL}/user`;
+
 // @source: https://stackoverflow.com/a/52265733/11186407
 export const TIMEZONE_NAMES = [
     {"label":"(GMT-12:00) International Date Line West","value":"Etc/GMT+12"},
