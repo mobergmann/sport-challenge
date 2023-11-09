@@ -7,7 +7,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
 use axum_login::SqliteStore;
-use chrono::DateTime;
+use chrono::{DateTime, Utc};
 
 type AuthContext = axum_login::extractors::AuthContext<i64, User, SqliteStore<User>>;
 
@@ -43,10 +43,7 @@ pub async fn sign_out(mut auth: AuthContext) -> impl IntoResponse {
     (StatusCode::OK).into_response()
 }
 
-pub async fn get_activity(
-    mut auth: AuthContext,
-    Path(activity_id): Path<i64>,
-) -> impl IntoResponse {
+pub async fn get_activity(mut auth: AuthContext, Path(activity_id): Path<i64>) -> impl IntoResponse {
     let activity = match storage::get_activity(activity_id).await {
         Ok(activity) => activity,
         Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
@@ -57,6 +54,34 @@ pub async fn get_activity(
     (StatusCode::OK, Json(activity)).into_response()
 }
 
+pub async fn get_activities_from_to(mut auth: AuthContext, Path((from, to)): Path<(String, String)>) -> impl IntoResponse {
+    let from = match DateTime::parse_from_rfc3339(&from) {
+        Ok(time) => time.with_timezone(&Utc),
+        Err(_) => {
+            return (StatusCode::BAD_REQUEST, Json(":from url-parameter is not a valid rfc3339 format")).into_response();
+        }
+    };
+
+    let to = match DateTime::parse_from_rfc3339(&to) {
+        Ok(time) => time.with_timezone(&Utc),
+        Err(_) => {
+            return (StatusCode::BAD_REQUEST, Json(":to url-parameter is not a valid rfc3339 format")).into_response();
+        }
+    };
+
+    if to < from {
+        return (StatusCode::BAD_REQUEST, Json("the :to time must be later than the :from time")).into_response();
+    }
+
+    println!("from: {}, to: {}", from, to);
+
+    match storage::get_activities(&from, &to).await {
+        Ok(activities) => (StatusCode::OK, Json(activities)).into_response(),
+        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
+    }
+}
+
+/*
 pub async fn get_activities(mut auth: AuthContext) -> impl IntoResponse {
     let activities = match storage::get_all_activities().await {
         Ok(activities) => activities,
@@ -66,41 +91,44 @@ pub async fn get_activities(mut auth: AuthContext) -> impl IntoResponse {
     };
     (StatusCode::OK, Json(activities)).into_response()
 }
+*/
 
 pub async fn new_activity(
     mut auth: AuthContext,
     Json(payload): Json<StringBareActivity>,
 ) -> impl IntoResponse {
-    let start_time = match DateTime::parse_from_rfc3339(payload.start_time.as_str()) {
-        Ok(time) => time,
+    let start_time = match DateTime::parse_from_rfc3339(&payload.start_time) {
+        Ok(time) => time.with_timezone(&Utc),
         Err(_) => {
-            return (StatusCode::BAD_REQUEST, Json("not a valid rfc3339 date string string")).into_response();
+            return (StatusCode::BAD_REQUEST, Json("start_time is not a valid rfc3339 format")).into_response();
         }
     };
-    let end_time = match DateTime::parse_from_rfc3339(payload.end_time.as_str()) {
-        Ok(time) => time,
+
+    let end_time = match DateTime::parse_from_rfc3339(&payload.end_time) {
+        Ok(time) => time.with_timezone(&Utc),
         Err(_) => {
-            return (StatusCode::BAD_REQUEST, Json("not a valid rfc3339 date string string")).into_response();
+            return (StatusCode::BAD_REQUEST, Json("end_time is not a valid rfc3339 format")).into_response();
         }
     };
+
     if end_time < start_time {
-        return (StatusCode::BAD_REQUEST, Json("the end time point of the activity cannot be later than the beginning time point of the activity")).into_response();
+        return (StatusCode::BAD_REQUEST, Json("the end_time time must be later than the start_time")).into_response();
     }
 
-    let converted_activity = BareActivity {
-        amount: payload.amount,
-        activity_type: payload.activity_type,
-        start_time: DateTime::from(start_time),
-        end_time: DateTime::from(end_time),
-    };
+    println!("from: {}, to: {}", end_time, start_time);
 
-    let activity = match storage::new_activity(&converted_activity, &auth.current_user.unwrap()).await {
-        Ok(activity) => activity,
+    match storage::new_activity(&BareActivity {
+            amount: payload.amount,
+            activity_type: payload.activity_type,
+            start_time: start_time,
+            end_time: end_time,
+        }, &auth.current_user.unwrap()).await
+    {
+        Ok(activity) => (StatusCode::OK, Json(activity)).into_response(),
         Err(_) => {
-            return (StatusCode::INTERNAL_SERVER_ERROR).into_response()
+            (StatusCode::INTERNAL_SERVER_ERROR).into_response()
         }
-    };
-    (StatusCode::OK, Json(activity)).into_response()
+    }
 }
 
 pub async fn edit_activity(

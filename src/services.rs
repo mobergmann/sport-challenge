@@ -45,7 +45,7 @@ pub async fn backend_router() -> Router {
         .route("/v1/user/:username", get(get_user))
         // activity routes
         .route("/v1/activities/:id", get(get_activity))
-        .route("/v1/activities", get(get_activities))
+        .route("/v1/activities/:from/:to", get(get_activities_from_to))
         .route("/v1/activities", post(new_activity))
         .route("/v1/activities/edit", post(edit_activity))
         .route("/v1/activities/:id", delete(delete_activity))

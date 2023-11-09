@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::{Decode, FromRow};
 
@@ -13,16 +13,16 @@ pub struct Activity {
     pub author_id: i64,
     pub amount: i64,
     pub activity_type: ActivityType,
-    pub start_time: DateTime<Local>,
-    pub end_time: DateTime<Local>,
+    pub start_time: DateTime<Utc>,
+    pub end_time: DateTime<Utc>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct BareActivity {
     pub amount: i64,
     pub activity_type: ActivityType,
-    pub start_time: DateTime<Local>,
-    pub end_time: DateTime<Local>,
+    pub start_time: DateTime<Utc>,
+    pub end_time: DateTime<Utc>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
