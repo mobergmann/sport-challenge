@@ -1,4 +1,4 @@
-import {get_all_activities} from "./scripts/activity.js";
+import {get_activities} from "./scripts/activity.js";
 import {get_user_by_id} from "./scripts/user.js";
 
 /// @source: https://stackoverflow.com/a/31810991/11186407
@@ -8,6 +8,41 @@ Date.prototype.getWeek = function() {
     let dayOfYear = ((today - onejan + 86400000) / 86400000);
     return Math.ceil(dayOfYear / 7)
 };
+
+/// @source: https://stackoverflow.com/a/5210450/11186407
+Date.prototype.getFirstWeekDay = function() {
+    // strip time away and set date and time to the beginning of the week-day
+    let curr = new Date(this.toDateString());
+    curr.setHours(0);
+    curr.setMinutes(0);
+    curr.setSeconds(0);
+    curr.setMilliseconds(0);
+    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    return new Date(curr.setDate(first));
+}
+
+/// @source: https://stackoverflow.com/a/5210450/11186407
+Date.prototype.getLastWeekDay = function() {
+    // strip time away and set date and time to the end of the week-day
+    let curr = new Date(this.toDateString());
+    curr.setHours(23);
+    curr.setMinutes(59);
+    curr.setSeconds(59);
+    curr.setMilliseconds(999);
+    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    let last = first + 6; // last day is the first day + 6
+    return new Date(curr.setDate(last));
+}
+
+/// @source: https://stackoverflow.com/a/5210450/11186407
+Date.prototype.nextWeek = function() {
+    this.setDate(this.getDate() + 7);
+}
+
+/// @source: https://stackoverflow.com/a/5210450/11186407
+Date.prototype.previousWeek = function() {
+    this.setDate(this.getDate() - 7);
+}
 
 Array.prototype.sum = function() {
     let sum = 0;
@@ -25,13 +60,21 @@ Array.prototype.sum = function(key) {
     return sum;
 }
 
+
+
+
+// Global Variables
+let current_week = new Date();
+let global_chart;
+
+
 /// download all activities and store them in a map assigning each user a list of the associated activities
 /// the map is ordered by the *sum of the amount of the activities* of each user
-async function prepare_activities_data() {
+async function prepare_activities_data(from, to) {
     let activities_per_user = new Map();
 
-    for (const activity of await get_all_activities()) {
-        // if author not alreay in map, insert the author as a key and an emptpy list
+    for (const activity of await get_activities(from, to)) {
+        // if author not already in map, insert the author as a key and an empty list
         if (!activities_per_user.has(activity.author_id)) {
             activities_per_user.set(activity.author_id, []);
         }
@@ -110,14 +153,9 @@ function init_chart(activities_per_user, user_by_id) {
     // prepare for each user the y-Axis
     let activities_per_day = [];
     for (const [author_id, activities] of activities_per_user) {
-        // push ups done at day's index
+        // push-ups done at day's index
         let amounts = [0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < activities.length; ++i) {
-            // only factor in activities of this week
-            if (activities[i].start_time.getWeek() !== new Date().getWeek()) {
-                continue;
-            }
-
             // sum the activity's amount to its corresponding weekday
             const activity_weekday = activities[i].start_time.getDay();
             amounts[activity_weekday] += activities[i].amount;
@@ -152,8 +190,12 @@ function init_chart(activities_per_user, user_by_id) {
         tension: 0.1
     });
 
+    // first destroy char, so we can recreate it if it was already initialized
+    if (global_chart) {
+        global_chart.destroy();
+    }
     // create the chart
-    new Chart("graph-comparison-canvas", {
+    global_chart = new Chart("graph-comparison-canvas", {
         type: "line",
         data: {
             labels: x_axis_labels,
@@ -176,6 +218,7 @@ function init_log(activities_per_user, user_by_id) {
     }
 
     const parent = document.querySelector("#ref-log-list");
+    parent.innerHTML = null; // clear the log
     const template = document.querySelector("#template-log");
 
     let place = 1;
@@ -219,14 +262,31 @@ function init_log(activities_per_user, user_by_id) {
     }
 }
 
+async function update_frontend() {
+    document.querySelector("#current_year").innerHTML = current_week.getFullYear().toString();
+    document.querySelector("#current_week").innerHTML = current_week.getWeek().toString();
 
+    const from = current_week.getFirstWeekDay();
+    const to = current_week.getLastWeekDay();
+    const activities_per_user = await prepare_activities_data(from, to);
 
-async function main() {
-    let activities_per_user = await prepare_activities_data();
-    let user_by_id = await prepare_user_by_id(activities_per_user);
+    const user_by_id = await prepare_user_by_id(activities_per_user);
 
     init_chart(activities_per_user, user_by_id);
     init_log(activities_per_user, user_by_id);
+}
+
+async function main() {
+    await update_frontend();
+
+    document.querySelector("#button-load_previous_week").onclick = async () => {
+        current_week.previousWeek();
+        await update_frontend();
+    };
+    document.querySelector("#button-load_next_week").onclick = async () => {
+        current_week.nextWeek();
+        await update_frontend();
+    };
 }
 
 await main();

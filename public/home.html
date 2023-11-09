@@ -22,22 +22,41 @@
     </aside>
 
     <article>
-        <h2>Comparison</h2>
-        <div id="graph-comparison">
-            <canvas id="graph-comparison-canvas" style="width:100%;"></canvas>
+        <aside class="week-controls">
+            <button id="button-load_previous_week">
+                <img src="images/calendar.svg" alt="Calendar" class="calendar-svg">
+                <img src="images/minus.svg" alt="Plus Sign" class="direction-svg">
+            </button>
+
+            <div>
+                <div>Year:&nbsp;<div id="current_year"></div></div>
+                <div>Week:&nbsp;<div id="current_week"></div></div>
+            </div>
+
+            <button id="button-load_next_week">
+                <img src="images/calendar.svg" alt="Calendar" class="calendar-svg">
+                <img src="images/plus.svg" alt="Plus Sign" class="direction-svg">
+            </button>
+        </aside>
+
+        <div>
+            <h2>Comparison</h2>
+            <div id="graph-comparison">
+                <canvas id="graph-comparison-canvas" style="width:100%;"></canvas>
+            </div>
+
+            <div>
+                <!-- Here goes the ranking of the first three users and your place via the controller -->
+                <!-- todo: top 3 people -->
+                <!-- todo: you'r place -->
+            </div>
         </div>
 
         <div>
-            <!-- Here goes the ranking of the first three users and your place via the controller -->
-            <!-- todo: top 3 people -->
-            <!-- todo: you'r place -->
+            <h2>Log</h2>
+            <!-- Here goes the log of the users via the controller -->
+            <ul id="ref-log-list"></ul>
         </div>
-    </article>
-
-    <article>
-        <h2>Log</h2>
-        <!-- Here goes the log of the users via the controller -->
-        <ul id="ref-log-list"></ul>
     </article>
 </main>
 
