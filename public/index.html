@@ -14,13 +14,13 @@
 
 <article>
     <h2>Create a new Account or LogIn</h2>
-    <button onclick="location.href = '/auth/sign_up.html';">Sign Up</button>
-    <button onclick="location.href = '/auth/sign_in.html';">Sign In</button>
+    <button id="button-sign_up" onclick="location.href = '/auth/sign_up.html';">Sign Up</button>
+    <button id="button-sign_in" onclick="location.href = '/auth/sign_in.html';">Sign In</button>
 </article>
 
-<article>
-    <h2>Already loogged in?</h2>
-    <p>When you are logged in, go to home to see your data.</p>
+<article id="already_signd_in" style="display: none">
+    <h2>You are already loogged in!</h2>
+    <p>You can just open your home. No need to SignUp or SignIn.</p>
     <button onclick="window.location = '/home.html'">Go to Home</button>
 </article>
 
@@ -39,6 +39,8 @@
     <h2>Keep track</h2>
     <p>Keep a log of your activities.</p>
 </article>
+
+<script src="index.js" type="module"></script>
 </body>
 
 </html>
