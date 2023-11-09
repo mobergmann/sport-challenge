@@ -1,8 +1,14 @@
-export async function do_request(request) {
+import {BASE_URL} from "./variables.js";
+
+export async function do_request(request, body_expected = true) {
     return await fetch(request)
         .then((response) => {
             if (response.status === 200) {
-                return response.json();
+                if (!body_expected) {
+                    return response;
+                } else {
+                    return response.json();
+                }
             } else {
                 throw new Error("Something went wrong on API server!");
             }
@@ -14,4 +20,13 @@ export async function do_request(request) {
             console.error(error);
             throw error;
         });
+}
+
+
+export async function ping() {
+    const request = new Request(`${BASE_URL}/ping`, {
+        method: "GET",
+    });
+
+    return await do_request(request, false);
 }

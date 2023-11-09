@@ -1,5 +1,6 @@
 import {get_activities} from "./scripts/activity.js";
 import {get_user_by_id} from "./scripts/user.js";
+import {ping} from "./scripts/requests.js"
 
 /// @source: https://stackoverflow.com/a/31810991/11186407
 Date.prototype.getWeek = function() {
@@ -277,6 +278,13 @@ async function update_frontend() {
 }
 
 async function main() {
+    try {
+        await ping();
+    } catch (error) {
+        alert("You are not signed in. Sign in first.");
+        window.location = "/auth/sign_in.html"
+    }
+
     await update_frontend();
 
     document.querySelector("#button-load_previous_week").onclick = async () => {

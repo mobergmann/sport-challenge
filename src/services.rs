@@ -49,6 +49,8 @@ pub async fn backend_router() -> Router {
         .route("/v1/activities", post(new_activity))
         .route("/v1/activities/edit", post(edit_activity))
         .route("/v1/activities/:id", delete(delete_activity))
+        // for checking if you are logged in
+        .route("/v1/ping", get(ping))
         // routes above are protected
         .route_layer(RequireAuthorizationLayer::<i64, User>::login())
         // authentication routes

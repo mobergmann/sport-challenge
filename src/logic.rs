@@ -11,6 +11,10 @@ use chrono::{DateTime, Utc};
 
 type AuthContext = axum_login::extractors::AuthContext<i64, User, SqliteStore<User>>;
 
+pub async fn ping() -> impl IntoResponse {
+    (StatusCode::OK).into_response()
+}
+
 pub async fn sign_up(Json(payload): Json<BareUser>) -> impl IntoResponse {
     // if username already exists, return with error
     if storage::user_exists(&payload.name).await {
