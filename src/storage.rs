@@ -2,6 +2,7 @@ use crate::activity::{Activity, BareActivity};
 use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
 use sqlx::{ConnectOptions, Executor};
 use std::str::FromStr;
+use chrono::{DateTime, Utc};
 
 use crate::hasher;
 use crate::user::{BareUser, User};
@@ -132,6 +133,21 @@ pub async fn get_activity(id: i64) -> Result<Activity, Error> {
     Ok(activity)
 }
 
+pub async fn get_activities(from: &DateTime<Utc>, to: &DateTime<Utc>) -> Result<Vec<Activity>, Error> {
+    let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+
+    match sqlx::query_as("SELECT * FROM activities WHERE start_time >= $1 and end_time <= $2")
+        .bind(from)
+        .bind(to)
+        .fetch_all(&pool)
+        .await
+    {
+        Ok(activities) => Ok(activities),
+        Err(_) => Err(Error::InternalError),
+    }
+}
+
+/*
 pub async fn get_all_activities() -> Result<Vec<Activity>, Error> {
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
 
@@ -146,6 +162,7 @@ pub async fn get_all_activities() -> Result<Vec<Activity>, Error> {
 
     Ok(activities)
 }
+*/
 
 pub async fn new_activity(activity: &BareActivity, author: &User) -> Result<Activity, Error> {
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();

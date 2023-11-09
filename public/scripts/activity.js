@@ -12,8 +12,8 @@ export async function get_activity(id) {
     return await do_request(request);
 }
 
-export async function get_all_activities() {
-    const request = new Request(`${BASE_ACTIVITIES_URL}`, {
+export async function get_activities(from, to) {
+    const request = new Request(`${BASE_ACTIVITIES_URL}/${from.toISOString()}/${to.toISOString()}`, {
         method: "GET",
     });
 
