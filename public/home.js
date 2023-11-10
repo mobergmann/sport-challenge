@@ -108,13 +108,15 @@ async function prepare_activities_data(from, to) {
     }
 
     // sort the activities_per_user map so that the person with the most amounts is inserted first
+    // convert map to list of tuples
     let tmp = [];
-    for (const [author_id, activities] of activities_per_user) {
-        tmp.push({author_id: author_id, activities: activities});
+    for (const [key, value] of activities_per_user) {
+        tmp.push([key, value]);
     }
-    tmp = tmp.sort((lhs, rhs) => {
-        let lhs_sum = lhs.activities.reduce((a, b) => a.amount + b.amount, 0);
-        let rhs_sum = rhs.activities.reduce((a, b) => a.amount + b.amount, 0);
+    // sort tmp by value sum
+    tmp.sort((lhs, rhs) => {
+        let lhs_sum = lhs[1].sum("amount");
+        let rhs_sum = rhs[1].sum("amount");
 
         // negative if a is less than b,
         // positive if a is greater than b,
@@ -127,10 +129,12 @@ async function prepare_activities_data(from, to) {
             return 0;
         }
     });
-    // convert placeholder to map
+    // reverse tmp, so elements are sorted descending
+    tmp.reverse();
+    // conver tmp back to a map
     let sorted_activities_per_user = new Map();
     for (const i of tmp) {
-        sorted_activities_per_user.set(i.author_id, i.activities);
+        sorted_activities_per_user.set(i[0], i[1]);
     }
 
     return sorted_activities_per_user;
