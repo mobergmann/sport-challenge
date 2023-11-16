@@ -90,11 +90,6 @@ main {
     display: none;
 }
 
-@media screen and (max-width: 430px) {
-    .logactivity {
-	flex-wrap: wrap;
-    }
-}
 
 .logactivity {
     padding: 0.1rem;
@@ -102,6 +97,7 @@ main {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .logactivity-propertie {
