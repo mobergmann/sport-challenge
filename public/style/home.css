@@ -57,24 +57,29 @@ main {
     border: 1px solid;
     padding: 1rem;
 }
+
 .logentry-d1 {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .logentry-d2 {
     display: flex;
     flex-direction: row;
 }
+
 .logentry-place {
     display: flex;
     flex-direction: row;
     margin-right: 1rem;
 }
+
 .logentry-username {
     margin-right: 1rem;
 }
+
 .logentry-amount {
     display: flex;
     justify-content: flex-end;
@@ -84,22 +89,28 @@ main {
 .log-activities {
     display: none;
 }
+
+
 .logactivity {
     padding: 0.1rem;
     border: 1px solid;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
+
 .logactivity-propertie {
     width: 100%;
     display: flex;
     flex-direction: row;
     margin: 1rem;
 }
+
 .logactivity-starttime {
 
 }
+
 .logactivity-duration {
 
 }
