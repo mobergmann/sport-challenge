@@ -30,11 +30,13 @@ function spawn_timzone(id, parent) {
     parent.appendChild(label);
 }
 
-let now = new Date();
-
 spawn_timzone("start_time-timezone", document.getElementById("start_time-timezone-container"));
+
 // set default date to today
-document.getElementById("start_time").value = now.toISOString().slice(0,16);
+const currentDate = new Date();
+const formattedDateTime = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}T${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}`;
+console.log(formattedDateTime);
+document.getElementById("start_time").value = formattedDateTime.slice(0, 16);
 
 //spawn_timzone("end_time-timezone", document.getElementById("end_time-timezone-container"));
 // set default date to today
@@ -44,7 +46,7 @@ document.getElementById("submit").addEventListener("click", async () => {
     const amount = Number(document.getElementById("amount").value);
     const activity_type = document.getElementById("activity_type").value;
 
-    let start_time = new Date(document.getElementById("start_time").value).toISOString();
+    // let start_time = new Date(document.getElementById("start_time").value).toISOString();
     // todo add timezone to end of string
     console.log(start_time);
 
