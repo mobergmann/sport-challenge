@@ -24,7 +24,7 @@ export async  function sign_up(username, password) {
             }
         })
         .then((response) => {
-            console.debug("Sucessfull SignUp");
+            console.debug("Successfull SignUp");
             console.debug(response);
             return response;
         })
@@ -59,7 +59,7 @@ export async  function sign_in(username, password) {
             }
         })
         .then((response) => {
-            console.debug("Sucessfull SignIn");
+            console.debug("Successfull SignIn ajsldkjasd");
             console.debug(response);
             return response;
         })
@@ -85,7 +85,7 @@ export async function sign_out() {
             }
         })
         .then((response) => {
-            console.debug("Sucessfull SignOut");
+            console.debug("Successfull SignOut");
             console.debug(response);
             return response;
         })

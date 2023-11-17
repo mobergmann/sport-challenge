@@ -153,7 +153,7 @@ async function prepare_user_by_id(activities_per_user) {
 /// display the activities in a chart
 function init_chart(activities_per_user, user_by_id) {
     // display the chart
-    const x_axis_labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const x_axis_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
     // prepare for each user the y-Axis
     let activities_per_day = [];
@@ -268,8 +268,15 @@ function init_log(activities_per_user, user_by_id) {
 }
 
 async function update_frontend() {
-    document.querySelector("#current_year").innerHTML = current_week.getFullYear().toString();
-    document.querySelector("#current_week").innerHTML = current_week.getWeek().toString();
+    
+    // where to put it?? Needs to be replaced !
+    function convertDate(inputFormat) {
+        function pad(s) { return (s < 10) ? '0' + s : s; }
+        var d = new Date(inputFormat)
+        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('.')
+    }
+    document.querySelector("#current_date").innerHTML = convertDate(current_week);
+
 
     const from = current_week.getFirstWeekDay();
     const to = current_week.getLastWeekDay();
