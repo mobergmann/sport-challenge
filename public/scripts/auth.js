@@ -59,7 +59,7 @@ export async  function sign_in(username, password) {
             }
         })
         .then((response) => {
-            console.debug("Successfull SignIn ajsldkjasd");
+            console.debug("Successfull SignIn");
             console.debug(response);
             return response;
         })
