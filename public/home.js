@@ -45,6 +45,10 @@ Date.prototype.previousWeek = function() {
     this.setDate(this.getDate() - 7);
 }
 
+Date.prototype.dateToHumanReadable = function() {
+    return `${this.getDate()}.${this.getMonth() + 1}.${this.getFullYear()}`;
+}
+
 Array.prototype.sum = function() {
     let sum = 0;
     for (const element of this) {
@@ -268,15 +272,8 @@ function init_log(activities_per_user, user_by_id) {
 }
 
 async function update_frontend() {
-    
-    // where to put it?? Needs to be replaced !
-    function convertDate(inputFormat) {
-        function pad(s) { return (s < 10) ? '0' + s : s; }
-        var d = new Date(inputFormat)
-        return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('.')
-    }
-    document.querySelector("#current_date").innerHTML = convertDate(current_week);
 
+    document.querySelector("#current_date").innerHTML = current_week.dateToHumanReadable();
 
     const from = current_week.getFirstWeekDay();
     const to = current_week.getLastWeekDay();
