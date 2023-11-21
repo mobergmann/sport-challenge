@@ -1,4 +1,5 @@
 import {BASE_AUTH_URL} from "./variables.js";
+import {do_request} from "./requests.js";
 
 /// sign up a user
 export async  function sign_up(username, password) {
@@ -50,23 +51,7 @@ export async  function sign_in(username, password) {
         credentials: 'include',
     });
 
-    return await fetch(request)
-        .then((response) => {
-            if (response.status === 200) {
-                return response;
-            } else {
-                throw new Error("Something went wrong on API server!");
-            }
-        })
-        .then((response) => {
-            console.debug("Sucessfull SignIn");
-            console.debug(response);
-            return response;
-        })
-        .catch((error) => {
-            console.error(error);
-            throw error;
-        });
+    return await do_request(request);
 }
 
 /// sign out a user

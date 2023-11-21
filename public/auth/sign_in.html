@@ -29,13 +29,15 @@
     
     <script type="module">
         import {sign_in} from "../scripts/auth.js";
+        import {setCookie} from "../scripts/helper.js";
 
         document.getElementById("submit").addEventListener("click", async () => {
             const username = document.getElementById("username").value;
             const password1 = document.getElementById("password").value;
             
             try {
-                await sign_in(username, password1);
+                const user_obj = await sign_in(username, password1);
+                setCookie('uid', user_obj.id, 365);
                 window.location = "/home.html";
             } catch (_) {
                 alert("SignIn not successful");
