@@ -1,6 +1,7 @@
 import {get_activities} from "./scripts/activity.js";
 import {get_user_by_id} from "./scripts/user.js";
-import {ping} from "./scripts/requests.js"
+import {ping} from "./scripts/requests.js";
+import {getCookie} from "./scripts/helper.js";
 
 /// @source: https://stackoverflow.com/a/31810991/11186407
 Date.prototype.getWeek = function() {
@@ -160,6 +161,7 @@ function init_chart(activities_per_user, user_by_id) {
     // display the chart
     const x_axis_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
+    let color;
     // prepare for each user the y-Axis
     let activities_per_day = [];
     for (const [author_id, activities] of activities_per_user) {
@@ -178,13 +180,30 @@ function init_chart(activities_per_user, user_by_id) {
             amounts[activity_weekday] += activities[i].amount;
         }
 
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        if(getCookie('uid') == author_id) {
+            color = 'Red';
+        } else {
+            color = 'rgb(75, 192, 192)';
+        }
+
         activities_per_day.push({
             // todo: replace with author name
             label: user_by_id.get(author_id).name,
             data: amounts,
             fill: false,
             // todo: random color
-            borderColor: 'rgb(75, 192, 192)',
+            borderColor: color,
             tension: 0.1
         });
     }
@@ -203,7 +222,7 @@ function init_chart(activities_per_user, user_by_id) {
         label: "Goal",
         data: [140, 140, 140, 140, 140, 140, 140],
         fill: false,
-        borderColor: 'Red',
+        borderColor: 'Green',
         tension: 0.1
     });
 
@@ -211,6 +230,7 @@ function init_chart(activities_per_user, user_by_id) {
     if (global_chart) {
         global_chart.destroy();
     }
+
     // create the chart
     global_chart = new Chart("graph-comparison-canvas", {
         type: "line",
