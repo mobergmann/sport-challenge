@@ -5,41 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports Challenge</title>
+    <link rel="stylesheet" type="text/css" href="style/index.css" media="screen"/>
 </head>
 
 <body>
-<header>
-    <h1>Sport Challenge</h1>
-</header>
+<main>
+	<header>
+	    <h1>Sport Challenge</h1>
+	</header>
 
-<article>
-    <h2>Create a new Account or LogIn</h2>
-    <button id="button-sign_up" onclick="location.href = '/auth/sign_up.html';">Sign Up</button>
-    <button id="button-sign_in" onclick="location.href = '/auth/sign_in.html';">Sign In</button>
-</article>
+	<article>
+	    <h2>Create a new Account or LogIn</h2>
+	    <button id="button-sign_up" onclick="location.href = '/auth/sign_up.html';">Sign Up</button>
+	    <button id="button-sign_in" onclick="location.href = '/auth/sign_in.html';">Sign In</button>
+	</article>
 
-<article id="already_signd_in" style="display: none">
-    <h2>You are already loogged in!</h2>
-    <p>You can just open your home. No need to SignUp or SignIn.</p>
-    <button onclick="window.location = '/home.html'">Go to Home</button>
-</article>
+	<article id="already_signd_in" style="display: none">
+	    <h2>You are already loogged in!</h2>
+	    <p>You can just open your home. No need to SignUp or SignIn.</p>
+	    <button onclick="window.location = '/home.html'">Go to Home</button>
+	</article>
 
-<article>
-    <h2>Disclaimer</h2>
-    <p>This App is not even in pre alpha. All your data may be whiped at any point.<br>
-        Don't rely on this app to store all your data nor to store it securely.</p>
-</article>
+	<article>
+	    <h2>Disclaimer</h2>
+	    <p>This App is not even in pre alpha. All your data may be whiped at any point.<br>
+		Don't rely on this app to store all your data nor to store it securely.</p>
+	</article>
 
-<article>
-    <h2>Comare</h2>
-    <p>Challenge yourself by comparing your performance with your friends.</p>
-</article>
+	<article>
+	    <h2>Comare</h2>
+	    <p>Challenge yourself by comparing your performance with your friends.</p>
+	</article>
 
-<article>
-    <h2>Keep track</h2>
-    <p>Keep a log of your activities.</p>
-</article>
-
+	<article>
+	    <h2>Keep track</h2>
+	    <p>Keep a log of your activities.</p>
+	</article>
+</main>
 <script src="index.js" type="module"></script>
 </body>
 
