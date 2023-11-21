@@ -18,7 +18,7 @@ Date.prototype.getFirstWeekDay = function() {
     curr.setMinutes(0);
     curr.setSeconds(0);
     curr.setMilliseconds(0);
-    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    let first = curr.getDate() - curr.getDay() + 1; // First day is the day of the month - the day of the week
     return new Date(curr.setDate(first));
 }
 
@@ -30,7 +30,7 @@ Date.prototype.getLastWeekDay = function() {
     curr.setMinutes(59);
     curr.setSeconds(59);
     curr.setMilliseconds(999);
-    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    let first = curr.getDate() - curr.getDay() + 1; // First day is the day of the month - the day of the week
     let last = first + 6; // last day is the first day + 6
     return new Date(curr.setDate(last));
 }
@@ -44,6 +44,11 @@ Date.prototype.nextWeek = function() {
 Date.prototype.previousWeek = function() {
     this.setDate(this.getDate() - 7);
 }
+
+Date.prototype.dateToHumanReadable = function() {
+    return `${this.getDate()}.${this.getMonth() + 1}.${this.getFullYear()}`;
+}
+
 
 Array.prototype.sum = function() {
     let sum = 0;
@@ -153,7 +158,7 @@ async function prepare_user_by_id(activities_per_user) {
 /// display the activities in a chart
 function init_chart(activities_per_user, user_by_id) {
     // display the chart
-    const x_axis_labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const x_axis_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
     // prepare for each user the y-Axis
     let activities_per_day = [];
@@ -162,7 +167,14 @@ function init_chart(activities_per_user, user_by_id) {
         let amounts = [0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < activities.length; ++i) {
             // sum the activity's amount to its corresponding weekday
-            const activity_weekday = activities[i].start_time.getDay();
+            let activity_weekday = activities[i].start_time.getDay();
+
+            if(activity_weekday === 0) {
+                activity_weekday = 6;
+            } else {
+                activity_weekday -= 1;
+            }
+
             amounts[activity_weekday] += activities[i].amount;
         }
 
@@ -268,8 +280,7 @@ function init_log(activities_per_user, user_by_id) {
 }
 
 async function update_frontend() {
-    document.querySelector("#current_year").innerHTML = current_week.getFullYear().toString();
-    document.querySelector("#current_week").innerHTML = current_week.getWeek().toString();
+    document.querySelector("#current_date").innerHTML = current_week.dateToHumanReadable();
 
     const from = current_week.getFirstWeekDay();
     const to = current_week.getLastWeekDay();
