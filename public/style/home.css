@@ -117,3 +117,8 @@ main {
 .logactivity-amount {
 
 }
+
+#current_date {
+    margin-top: 14px;
+    font-size: 26px;
+}

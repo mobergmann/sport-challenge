@@ -45,6 +45,11 @@ Date.prototype.previousWeek = function() {
     this.setDate(this.getDate() - 7);
 }
 
+Date.prototype.dateToHumanReadable = function() {
+    return `${this.getDate()}.${this.getMonth() + 1}.${this.getFullYear()}`;
+}
+
+
 Array.prototype.sum = function() {
     let sum = 0;
     for (const element of this) {
@@ -268,8 +273,7 @@ function init_log(activities_per_user, user_by_id) {
 }
 
 async function update_frontend() {
-    document.querySelector("#current_year").innerHTML = current_week.getFullYear().toString();
-    document.querySelector("#current_week").innerHTML = current_week.getWeek().toString();
+    document.querySelector("#current_date").innerHTML = current_week.dateToHumanReadable();
 
     const from = current_week.getFirstWeekDay();
     const to = current_week.getLastWeekDay();
