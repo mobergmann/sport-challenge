@@ -1,8 +1,8 @@
 mod activity;
 mod hasher;
 mod logic;
-mod services;
-mod storage;
+mod routes;
+mod database;
 mod user;
 
 use axum::Router;
@@ -10,14 +10,14 @@ use axum::Router;
 #[tokio::main]
 async fn main() {
     // init database or exit program on error
-    match storage::init().await {
+    match database::init().await {
         Ok(_) => {},
         Err(_) => panic!("Error while initializing the database."),
     };
 
     let app = Router::new()
-        .merge(services::backend_router().await)
-        .merge(services::frontend_router().await);
+        .merge(routes::backend_router().await)
+        .merge(routes::frontend_router().await);
 
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
         .serve(app.into_make_service())

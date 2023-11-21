@@ -1,7 +1,12 @@
+mod auth;
+mod account;
+mod users;
+mod activities;
+
 use crate::activity::{BareActivity, StringBareActivity};
-use crate::storage::Error;
+use crate::database::Error;
 use crate::user::{BareUser, PublicUser, User};
-use crate::{hasher, storage};
+use crate::{hasher, database};
 use axum::extract::Path;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
@@ -17,19 +22,19 @@ pub async fn ping() -> impl IntoResponse {
 
 pub async fn sign_up(Json(payload): Json<BareUser>) -> impl IntoResponse {
     // if username already exists, return with error
-    if storage::user_exists(&payload.name).await {
+    if database::user_exists(&payload.name).await {
         return (StatusCode::CONFLICT).into_response();
     }
 
     // create a new user
-    match storage::insert_new_user(&payload).await {
+    match database::insert_new_user(&payload).await {
         Ok(user) => (StatusCode::CREATED, Json(user)).into_response(),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     }
 }
 
 pub async fn sign_in(mut auth: AuthContext, Json(payload): Json<BareUser>) -> impl IntoResponse {
-    let user = match storage::get_user(&payload.name).await {
+    let user = match database::get_user(&payload.name).await {
         Ok(user) => user,
         Err(_) => return (StatusCode::NOT_FOUND, "name does not exist").into_response(),
     };
@@ -48,7 +53,7 @@ pub async fn sign_out(mut auth: AuthContext) -> impl IntoResponse {
 }
 
 pub async fn get_activity(mut auth: AuthContext, Path(activity_id): Path<i64>) -> impl IntoResponse {
-    let activity = match storage::get_activity(activity_id).await {
+    let activity = match database::get_activity(activity_id).await {
         Ok(activity) => activity,
         Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
         Err(_) => {
@@ -79,7 +84,7 @@ pub async fn get_activities_from_to(mut auth: AuthContext, Path((from, to)): Pat
 
     println!("from: {}, to: {}", from, to);
 
-    match storage::get_activities(&from, &to).await {
+    match database::get_activities(&from, &to).await {
         Ok(activities) => (StatusCode::OK, Json(activities)).into_response(),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     }
@@ -121,7 +126,7 @@ pub async fn new_activity(
 
     println!("from: {}, to: {}", end_time, start_time);
 
-    match storage::new_activity(&BareActivity {
+    match database::new_activity(&BareActivity {
             amount: payload.amount,
             activity_type: payload.activity_type,
             start_time: start_time,
@@ -146,7 +151,7 @@ pub async fn delete_activity(
     mut auth: AuthContext,
     Path(activity_id): Path<i64>,
 ) -> impl IntoResponse {
-    let activity = match storage::get_activity(activity_id).await {
+    let activity = match database::get_activity(activity_id).await {
         Ok(activity) => activity,
         Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
         Err(_) => {
@@ -159,7 +164,7 @@ pub async fn delete_activity(
         return (StatusCode::UNAUTHORIZED).into_response();
     }
 
-    let activity = match storage::delete_activity(activity_id).await {
+    let activity = match database::delete_activity(activity_id).await {
         Ok(activity) => activity,
         Err(_) => {
             return (StatusCode::INTERNAL_SERVER_ERROR).into_response()
@@ -170,7 +175,7 @@ pub async fn delete_activity(
 
 pub async fn get_user(mut auth: AuthContext, Path(username): Path<String>) -> impl IntoResponse
 {
-    let user = match storage::get_user(&username).await {
+    let user = match database::get_user(&username).await {
         Ok(user) => user,
         Err(Error::ElementNotFound) => return (StatusCode::NO_CONTENT).into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
@@ -181,7 +186,7 @@ pub async fn get_user(mut auth: AuthContext, Path(username): Path<String>) -> im
 
 pub async fn get_user_by_id(mut auth: AuthContext, Path(user_id): Path<i64>) -> impl IntoResponse
 {
-    let user = match storage::get_user_by_id(&user_id).await {
+    let user = match database::get_user_by_id(&user_id).await {
         Ok(user) => user,
         Err(Error::ElementNotFound) => return (StatusCode::NO_CONTENT).into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
