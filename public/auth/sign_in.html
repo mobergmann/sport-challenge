@@ -36,7 +36,7 @@
             const password1 = document.getElementById("password").value;
             
             try {
-                const user_obj = await sign_in(username, password1);            
+                const user_obj = await sign_in(username, password1);
                 setCookie('uid', user_obj.id, 365);
                 window.location = "/home.html";
             } catch (_) {
