@@ -167,12 +167,12 @@ function init_chart(activities_per_user, user_by_id) {
         let amounts = [0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < activities.length; ++i) {
             // sum the activity's amount to its corresponding weekday
-            let activity_weekday;
+            let activity_weekday = activities[i].start_time.getDay();
 
-            if( (activities[i].start_time.getDay()) === 0) {
+            if(activity_weekday === 0) {
                 activity_weekday = 6;
             } else {
-                activity_weekday = activities[i].start_time.getDay() - 1;
+                activity_weekday -= 1;
             }
 
             amounts[activity_weekday] += activities[i].amount;
