@@ -191,7 +191,7 @@ function init_chart(activities_per_user, user_by_id) {
             return null;
         }
 
-        if(getCookie('uid') == author_id) {
+        if (getCookie('uid') === author_id) {
             color = 'Red';
         } else {
             color = 'rgb(75, 192, 192)';
