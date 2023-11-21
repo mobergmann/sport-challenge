@@ -10,8 +10,8 @@ export function setCookie(name,value,days) {
 }
 
 export function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
     for(var i=0;i < ca.length;i++) {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
