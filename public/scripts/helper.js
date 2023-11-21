@@ -1,6 +1,6 @@
 // https://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript
 export function setCookie(name,value,days) {
-    var expires = "";
+    let expires = "";
     if (days) {
         var date = new Date();
         date.setTime(date.getTime() + (days*24*60*60*1000));
