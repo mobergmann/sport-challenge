@@ -1,12 +1,13 @@
-type AuthContext = axum_login::extractors::AuthContext<i64, User, SqliteStore<User>>;
-
-use crate::user::{BareUser, PublicUser, User};
-use crate::database::{BareUser, PublicUser, User};
+use crate::database;
+use crate::hasher;
+use crate::user::{BareUser, User};
 
 use axum_login::SqliteStore;
 use axum::response::IntoResponse;
 use axum::http::StatusCode;
 use axum::Json;
+
+type AuthContext = axum_login::extractors::AuthContext<i64, User, SqliteStore<User>>;
 
 pub async fn sign_in(mut auth: AuthContext, Json(payload): Json<BareUser>) -> impl IntoResponse
 {
