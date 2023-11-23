@@ -3,7 +3,7 @@ mod hasher;
 mod logic;
 mod routes;
 mod database;
-mod user;
+mod account;
 
 use axum::Router;
 

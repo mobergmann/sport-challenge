@@ -5,7 +5,7 @@ use std::str::FromStr;
 use chrono::{DateTime, Utc};
 
 use crate::hasher;
-use crate::user::{BareUser, User};
+use crate::account::{BareAccount, Account};
 
 pub const DB_URI: &str = "data.db";
 
@@ -61,12 +61,12 @@ pub async fn init() -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn insert_new_user(user: &BareUser) -> Result<User, Error> {
+pub async fn insert_new_user(user: &BareAccount) -> Result<Account, Error> {
     let password_hash = hasher::hash(&user.password);
 
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
 
-    let user: User = sqlx::query_as("insert into users (name, password_hash) values ($1, $2) returning *")
+    let user: Account = sqlx::query_as("insert into users (name, password_hash) values ($1, $2) returning *")
         .bind(&user.name).bind(password_hash)
         .fetch_one(&pool)
         .await
@@ -75,10 +75,10 @@ pub async fn insert_new_user(user: &BareUser) -> Result<User, Error> {
     Ok(user)
 }
 
-pub async fn get_user(name: &String) -> Result<User, Error> {
+pub async fn get_user(name: &String) -> Result<Account, Error> {
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
 
-    let user: User = match sqlx::query_as("select * from users where name = $1")
+    let user: Account = match sqlx::query_as("select * from users where name = $1")
         .bind(name.as_str())
         .fetch_one(&pool)
         .await
@@ -91,10 +91,10 @@ pub async fn get_user(name: &String) -> Result<User, Error> {
     Ok(user)
 }
 
-pub async fn get_user_by_id(id: &i64) -> Result<User, Error> {
+pub async fn get_user_by_id(id: &i64) -> Result<Account, Error> {
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
 
-    let user: User = match sqlx::query_as("select * from users where id = $1")
+    let user: Account = match sqlx::query_as("select * from users where id = $1")
         .bind(id)
         .fetch_one(&pool)
         .await
@@ -164,7 +164,7 @@ pub async fn get_all_activities() -> Result<Vec<Activity>, Error> {
 }
 */
 
-pub async fn new_activity(activity: &BareActivity, author: &User) -> Result<Activity, Error> {
+pub async fn new_activity(activity: &BareActivity, author: &Account) -> Result<Activity, Error> {
     let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
 
     let activity: Activity = sqlx::query_as("insert into activities (author_id, amount, activity_type, start_time, end_time) values ($1, $2, $3, $4, $5) returning *")
