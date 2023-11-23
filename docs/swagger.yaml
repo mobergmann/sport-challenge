@@ -2,9 +2,9 @@ openapi: 3.0.0
 info:
   version: 0.1.0
   title: Sport Challenge
-  description: |
-    API for the Sport Challenge Backend. Can be used to build a frontend from the App.
-
+  description: >
+    API for the Sport Challenge Backend. Can be used to build a frontend from
+    the App.
 paths:
   /auth/login:
     post:
@@ -18,9 +18,9 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginAccount'
       responses:
-        200:
+        '200':
           $ref: '#/components/responses/Account'
-        401:
+        '401':
           description: The username doesn't exist or the password didn't match
           content:
             application/json:
@@ -29,42 +29,25 @@ paths:
                 properties:
                   message:
                     type: string
-
   /auth/logout:
     put:
       description: Invalidates the users session and therefore logs the user out.
       tags:
         - auth
       responses:
-        200:
+        '200':
           $ref: '#/components/responses/Account'
-  
-  /auth/ping:
-    get:
-      description: |
-        A ping to the server. 
-        Can be used to check weather the current session is valid.
-      tags:
-        - auth
-      responses:
-        200:
-          description: Successful response
-          $ref: '#/components/responses/Account'
-        401:
-          description: The current session is not valid
-  
   /account:
     get:
       description: Returns the Account object for the current Account/Session.
       tags:
         - account
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/Account'
-        401:
+        '401':
           description: The current session is not valid
-
     post:
       description: For creating a new account/ Signing Up
       tags:
@@ -76,10 +59,10 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAccount'
       responses:
-        200:
+        '201':
           description: Successful response
           $ref: '#/components/responses/Account'
-        409:
+        '409':
           description: The username or the E-Mail is already taken
           content:
             application/json:
@@ -88,9 +71,10 @@ paths:
                 properties:
                   message:
                     type: string
-
     put:
-      description: Edit the properties of the current Account (except the password, which has to be set by a seperate route).
+      description: >-
+        Edit the properties of the current Account (except the password, which
+        has to be set by a seperate route).
       tags:
         - account
       requestBody:
@@ -100,12 +84,12 @@ paths:
             schema:
               $ref: '#/components/schemas/EditAccount'
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/Account'
-        401:
+        '401':
           description: The current session is not valid
-        409:
+        '409':
           description: The username or the E-Mail is already taken
           content:
             application/json:
@@ -114,18 +98,22 @@ paths:
                 properties:
                   message:
                     type: string
-
     delete:
       description: (Permanently!!!) Delete the current Account.
       tags:
         - account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordValidation'
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/Account'
-        401:
+        '401':
           description: The current session is not valid
-  
   /account/password:
     put:
       description: Edit the Password of the current Account.
@@ -136,18 +124,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object 
-              properties:
-                pasword:
-                  type: string
+              $ref: '#/components/schemas/PasswordValidation'
       responses:
-          200:
-            description: Successful response
-            $ref: '#/components/responses/Account'
-          403:
-            description: User is not logged in/ Session is not valid
-  
-  /users/id/{id}:
+        '200':
+          description: Successful response
+          $ref: '#/components/responses/Account'
+        '403':
+          description: User is not logged in/ Session is not valid
+  '/users/id/{id}':
     get:
       description: Returns the public profile of an User.
       tags:
@@ -161,15 +145,14 @@ paths:
             type: integer
             format: int64
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/User'
-        204:
+        '204':
           description: User with the id does not exist
-        403:
+        '403':
           description: User is not logged in/ Session is not valid
-
-  /users/{username}:
+  '/users/{username}':
     get:
       description: Returns the public profile of an User.
       tags:
@@ -182,14 +165,13 @@ paths:
           schema:
             type: string
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/User'
-        204:
-            description: User with the username does not exist
-        403:
+        '204':
+          description: User with the username does not exist
+        '403':
           description: User is not logged in/ Session is not valid
-  
   /activities:
     post:
       description: Push a new Activity.
@@ -202,13 +184,12 @@ paths:
             schema:
               $ref: '#/components/schemas/NewActivity'
       responses:
-        200:
+        '201':
           description: Successful response
           $ref: '#/components/responses/Activity'
-        403:
+        '403':
           description: User is not logged in/ Session is not valid
-
-  /activities/{id}:
+  '/activities/{id}':
     get:
       description: Get an Activity.
       tags:
@@ -222,14 +203,13 @@ paths:
             type: integer
             format: int64
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/Activity'
-        204:
+        '204':
           description: Activity with the id does not exist
-        403:
+        '403':
           description: User is not logged in/ Session is not valid
-
     put:
       description: Edit an Activity.
       tags:
@@ -249,14 +229,13 @@ paths:
             schema:
               $ref: '#/components/schemas/NewActivity'
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/Activity'
-        204:
+        '204':
           description: Activity with the id does not exist
-        403:
+        '403':
           description: User is not logged in/ Session is not valid
-
     delete:
       description: Delete an Activity.
       tags:
@@ -270,15 +249,14 @@ paths:
             type: integer
             format: int64
       responses:
-        200:
+        '200':
           description: Successful response
           $ref: '#/components/responses/Activity'
-        204:
+        '204':
           description: Activity with the id does not exist
-        403:
+        '403':
           description: User is not logged in/ Session is not valid
-
-  /activities/{from}/{to}:
+  '/activities/{from}/{to}':
     get:
       description: Get a list of activities in an given time Intervall.
       tags:
@@ -299,7 +277,7 @@ paths:
             type: string
             format: date
       responses:
-        200:
+        '200':
           description: Successful response
           content:
             application/json:
@@ -307,9 +285,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/responses/Activity'
-        403:
+        # todo bad request
+        '403':
           description: User is not logged in/ Session is not valid
-
 components:
   schemas:
     LoginAccount:
@@ -319,6 +297,7 @@ components:
           type: string
         password:
           type: string
+          format: password
     CreateAccount:
       type: object
       properties:
@@ -326,6 +305,7 @@ components:
           type: string
         password:
           type: string
+          format: password
     EditAccount:
       type: object
       properties:
@@ -348,7 +328,7 @@ components:
           type: integer
           format: int64
         activity_type:
-            $ref: '#/components/schemas/ActivityType'
+          $ref: '#/components/schemas/ActivityType'
         start_time:
           type: string
           format: date
@@ -362,21 +342,26 @@ components:
           type: integer
           format: int64
         activity_type:
-            $ref: '#/components/schemas/ActivityType'
+          $ref: '#/components/schemas/ActivityType'
         start_time:
           type: string
           format: date
         end_time:
           type: string
           format: date
-
+    PasswordValidation:
+      type: object
+      properties:
+        password:
+          type: string
+          format: password
   responses:
     Account:
       description: Account object
       content:
         application/json:
           schema:
-            type: object 
+            type: object
             properties:
               id:
                 type: integer
@@ -404,20 +389,20 @@ components:
           schema:
             type: object
             properties:
-              id: 
+              id:
                 type: integer
                 format: int64
-              author_id: 
+              author_id:
                 type: integer
                 format: int64
-              amount: 
+              amount:
                 type: integer
                 format: int64
-              activity_type: 
-                 $ref: '#/components/schemas/ActivityType'
-              start_time: 
+              activity_type:
+                $ref: '#/components/schemas/ActivityType'
+              start_time:
                 type: string
                 format: date
-              end_time: 
+              end_time:
                 type: string
                 format: date
