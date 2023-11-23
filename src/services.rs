@@ -9,7 +9,6 @@ use axum::Router;
 use axum_login::axum_sessions::async_session::MemoryStore;
 use axum_login::axum_sessions::{SameSite, SessionLayer};
 use axum_login::{AuthLayer, RequireAuthorizationLayer, SqliteStore};
-use rand::Rng;
 use sqlx::sqlite::SqlitePoolOptions;
 use tower_http::services::ServeDir;
 
@@ -22,9 +21,7 @@ pub async fn frontend_router() -> Router {
     Router::new().nest_service("/", ServeDir::new("public"))
 }
 
-pub async fn backend_router() -> Router {
-    let secret = rand::thread_rng().gen::<[u8; 64]>();
-
+pub async fn backend_router(secret: [u8; 64]) -> Router {
     let session_store = MemoryStore::new();
     let session_layer = SessionLayer::new(session_store, &secret)
         .with_secure(false)
