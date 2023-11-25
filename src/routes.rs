@@ -1,3 +1,4 @@
+use crate::account::Account;
 use crate::database::DB_URI;
 use crate::logic::account::{
     delete_account, edit_account, edit_account_password, get_account, post_account,
@@ -7,7 +8,6 @@ use crate::logic::activities::{
 };
 use crate::logic::auth::{login, logout};
 use crate::logic::users::{get_user, get_user_id};
-use crate::account::Account;
 
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
@@ -18,6 +18,7 @@ use axum_login::axum_sessions::{SameSite, SessionLayer};
 use axum_login::{AuthLayer, RequireAuthorizationLayer, SqliteStore};
 use rand::Rng;
 use sqlx::sqlite::SqlitePoolOptions;
+use sqlx::SqlitePool;
 use tower_http::services::ServeDir;
 
 #[allow(clippy::unused_async)]
@@ -29,7 +30,7 @@ pub async fn frontend_router() -> Router {
     Router::new().nest_service("/", ServeDir::new("public"))
 }
 
-pub async fn backend_router() -> Router {
+pub async fn backend_router(pool: &SqlitePool) -> Router {
     let secret = rand::thread_rng().gen::<[u8; 64]>(); // todo use secret from environment variable
 
     let session_store = MemoryStore::new();
@@ -78,4 +79,5 @@ pub async fn backend_router() -> Router {
         .merge(account_router)
         .merge(users_router)
         .merge(activities_router)
+        .with_state(pool)
 }

@@ -1,16 +1,22 @@
+use crate::account::{Account, BareAccount};
 use crate::database;
 use crate::hasher;
-use crate::account::{BareAccount, Account};
+use axum::extract::State;
 
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
 use axum_login::SqliteStore;
+use sqlx::SqlitePool;
 
 type AuthContext = axum_login::extractors::AuthContext<i64, Account, SqliteStore<Account>>;
 
-pub async fn login(mut auth: AuthContext, Json(payload): Json<BareAccount>) -> impl IntoResponse {
-    let user = match database::get_user(&payload.name).await {
+pub async fn login(
+    State(pool): State<&SqlitePool>,
+    mut auth: AuthContext,
+    Json(payload): Json<BareAccount>,
+) -> impl IntoResponse {
+    let user = match database::account::get(pool, &payload.name).await {
         Ok(user) => user,
         Err(_) => return (StatusCode::NOT_FOUND, "name does not exist").into_response(),
     };

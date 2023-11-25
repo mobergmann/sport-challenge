@@ -10,13 +10,10 @@ use axum::Router;
 #[tokio::main]
 async fn main() {
     // init database or exit program on error
-    match database::init().await {
-        Ok(_) => {},
-        Err(_) => panic!("Error while initializing the database."),
-    };
+    let pool = database::init().await.expect("Error while initializing the database.");
 
     let app = Router::new()
-        .merge(routes::backend_router().await)
+        .merge(routes::backend_router(&pool).await)
         .merge(routes::frontend_router().await);
 
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
