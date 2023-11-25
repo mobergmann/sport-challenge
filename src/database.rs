@@ -1,4 +1,4 @@
-use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
+use sqlx::sqlite::{SqliteConnectOptions};
 use sqlx::{ConnectOptions, Executor, SqlitePool};
 use std::str::FromStr;
 

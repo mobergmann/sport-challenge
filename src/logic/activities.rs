@@ -17,7 +17,7 @@ pub async fn get_activity(
 ) -> impl IntoResponse {
     let activity = match database::activity::get(pool, activity_id).await {
         Ok(activity) => activity,
-        Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
+        // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -133,12 +133,12 @@ pub async fn edit_activity(
     State(pool): State<&SqlitePool>,
     mut auth: AuthContext,
     Path(activity_id): Path<(i64)>,
-    Json(payload): Json<StringBareActivity>,
+    Json(payload): Json<BareActivity>, // todo string bare activity
 ) -> impl IntoResponse {
     // get the referenced activity from the database
     let activity = match database::activity::get(pool, activity_id).await {
         Ok(activity) => activity,
-        Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
+        // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -168,7 +168,7 @@ pub async fn delete_activity(
     // get the referenced activity from the database
     let activity = match database::activity::get(pool, activity_id).await {
         Ok(activity) => activity,
-        Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
+        // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
         // todo catch additional errors
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };

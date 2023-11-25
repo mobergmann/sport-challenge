@@ -1,9 +1,9 @@
 use crate::account::{BareAccount, EditAccount};
 use crate::database;
 use crate::logic::AuthContext;
-use axum::extract::State;
-
 use crate::logic::auth::logout;
+
+use axum::extract::State;
 use axum::response::IntoResponse;
 use axum::Json;
 use http::StatusCode;

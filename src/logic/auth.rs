@@ -1,8 +1,8 @@
 use crate::account::{Account, BareAccount};
 use crate::database;
 use crate::hasher;
-use axum::extract::State;
 
+use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;

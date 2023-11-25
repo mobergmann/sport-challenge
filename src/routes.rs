@@ -37,8 +37,7 @@ pub async fn backend_router(pool: &SqlitePool) -> Router {
     let session_layer = SessionLayer::new(session_store, &secret)
         .with_secure(false)
         .with_same_site_policy(SameSite::Lax);
-    let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
-    let user_store = SqliteStore::<Account>::new(pool);
+    let user_store = SqliteStore::<Account>::new(pool.clone());
     let auth_layer = AuthLayer::new(user_store, &secret);
 
     let auth_router = Router::new()
