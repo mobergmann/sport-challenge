@@ -26,7 +26,7 @@ impl AuthUser<i64> for Account {
 /// A subset of the `Account` object, but only contains the properties which can be edited directly.
 #[derive(Deserialize)]
 pub struct EditAccount {
-    pub name: String
+    pub name: String,
 }
 
 /// Like `Account`, but instead of storing the password hash, it stores the plain-text password.
