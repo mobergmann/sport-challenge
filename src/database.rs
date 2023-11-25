@@ -1,46 +1,36 @@
 use std::str::FromStr;
-use sqlx::sqlite::SqliteConnectOptions;
-use sqlx::{ConnectOptions, Executor};
+use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
+use sqlx::{ConnectOptions, Executor, SqlitePool};
 
 /// Path to the SQLite database
-pub const DB_URI: &str = "data.db";
+pub const DB_URI: &str = "sqlite://data.db";
 
-/// Error codes for the storage module.
-pub enum Error {
-    ElementNotFound,
-    InternalError,
-    NotImplemented,
-}
+static pool: SqlitePool = {
+    let connect_options = SqliteConnectOptions::new()
+        .filename(DB_URI)
+        .create_if_missing(true);
+
+    let pool = SqlitePool::connect_with(connect_options).expect("");
+    pool
+};
 
 /// Initialize the database.
 /// If the SQLite-File does not exist create it and create the tables.
-pub async fn init() -> Result<(), Error> {
-    let connection: SqliteConnectOptions =
-        match SqliteConnectOptions::from_str(&format!("sqlite://{}", DB_URI)) {
-            Ok(connection) => connection,
-            Err(_) => return Err(Error::InternalError),
-        };
+pub async fn init() -> Result<(), sqlx::Error> {
 
-    let mut connection = match connection.create_if_missing(true).connect().await {
-        Ok(connection) => connection,
-        Err(_) => return Err(Error::InternalError),
-    };
+    let mut connection = pool.acquire().await?;
 
     // create users table
-    match connection.execute(
+    connection.execute(
         "CREATE TABLE IF NOT EXISTS 'users' (
         'id'	INTEGER UNIQUE,
         'name'	TEXT NOT NULL UNIQUE,
         'password_hash'	TEXT NOT NULL UNIQUE,
         PRIMARY KEY('id' AUTOINCREMENT))")
-        .await
-    {
-        Ok(_) => {}
-        Err(_) => return Err(Error::InternalError), // todo return e
-    };
+        .await?;
 
     // create activities table
-    match connection.execute(
+    connection.execute(
         "CREATE TABLE IF NOT EXISTS 'activities' (
     	'id'	INTEGER UNIQUE,
     	'start_time'	TEXT NOT NULL,
@@ -50,51 +40,38 @@ pub async fn init() -> Result<(), Error> {
     	'author_id'	INTEGER NOT NULL,
     	FOREIGN KEY('author_id') REFERENCES 'users'('id'),
     	PRIMARY KEY('id' AUTOINCREMENT))")
-        .await
-    {
-        Ok(_) => {}
-        Err(_) => return Err(Error::InternalError), // todo return e
-    };
+        .await?;
 
-    Ok(())
+    Ok(pool)
 }
 
 mod account {
     use sqlx::sqlite::SqlitePoolOptions;
+    use sqlx::SqlitePool;
     use crate::account::{Account, BareAccount, EditAccount};
     use crate::database::{DB_URI, Error};
     use crate::hasher;
 
     /// Returns an account by id
-    pub async fn get(id: i64) -> Result<Account, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+    pub async fn get(id: i64) -> Result<Account, sqlx::Error> {
+        let mut connection = pool.acquire().await?;
 
-        let user: Account = match sqlx::query_as("select * from users where id = $1")
+        let user: Account = sqlx::query_as("select * from users where id = $1")
             .bind(id)
-            .fetch_one(&pool)
-            .await
-        {
-            Ok(user) => user,
-            Err(sqlx::Error::RowNotFound) => return Err(Error::ElementNotFound),
-            Err(_) => return Err(Error::InternalError), // todo return e
-        };
+            .fetch_one(&mut connection)
+            .await?;
 
         Ok(user)
     }
 
     /// Returns an account by name
-    pub async fn get_name(username: &String) -> Result<Account, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+    pub async fn get_name(pool: SqlitePool, username: &String) -> Result<Account, sqlx::Error> {
+        let mut connection = pool.acquire().await?;
 
-        let user: Account = match sqlx::query_as("select * from users where name = $1")
+        let user: Account = sqlx::query_as("select * from users where name = $1")
             .bind(username)
             .fetch_one(&pool)
-            .await
-        {
-            Ok(user) => user,
-            Err(sqlx::Error::RowNotFound) => return Err(Error::ElementNotFound),
-            Err(_) => return Err(Error::InternalError), // todo return e
-        };
+            .await?;
 
         Ok(user)
     }
@@ -103,7 +80,7 @@ mod account {
     pub async fn insert(account: BareAccount) -> Result<Account, Error> {
         let password_hash = hasher::hash(&account.password);
 
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+        let mut connection = pool.acquire().await?;
 
         let user: Account = sqlx::query_as("insert into users (name, password_hash) values ($1, $2) returning *")
             .bind(&account.name).bind(password_hash)
@@ -131,7 +108,7 @@ mod user {
 
     /// Returns a user by username
     pub async fn get(username: &String) -> Result<User, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+        let mut connection = pool.acquire().await?;
 
         let user: Account = match sqlx::query_as("select * from users where name = $1")
             .bind(username.as_str())
@@ -148,7 +125,7 @@ mod user {
 
     /// Returns a user by id
     pub async fn get_id(id: &i64)  -> Result<User, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+        let mut connection = pool.acquire().await?;
 
         let user: Account = match sqlx::query_as("select * from users where id = $1")
             .bind(id)
@@ -188,7 +165,7 @@ mod activity {
 
     /// Returns an activity
     pub async fn get(id: i64) -> Result<Activity, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+        let mut connection = pool.acquire().await?;
 
         let activity: Activity = match sqlx::query_as("select * from activities where id = $1")
             .bind(id)
@@ -207,7 +184,7 @@ mod activity {
 
     /// Returns a list of Activities which took place in the time interval from :from to :to
     pub async fn get_interval(from: DateTime<Utc>, to: DateTime<Utc>) ->  Result<Vec<Activity>, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+        let mut connection = pool.acquire().await?;
 
         match sqlx::query_as("SELECT * FROM activities WHERE start_time >= $1 and end_time <= $2")
             .bind(from)
@@ -222,7 +199,7 @@ mod activity {
 
     /// Inserts an activity into the database and returns the newly inserted activity
     pub async fn insert(activity: BareActivity) -> Result<Activity, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+        let mut connection = pool.acquire().await?;
 
         let activity: Activity = sqlx::query_as("insert into activities (author_id, amount, activity_type, start_time, end_time) values ($1, $2, $3, $4, $5) returning *")
             .bind(author.id)
@@ -244,7 +221,7 @@ mod activity {
 
     /// Deletes an activity and returns the deleted activity
     pub async fn delete(id: i64) -> Result<Activity, Error> {
-        let pool = SqlitePoolOptions::new().connect(DB_URI).await.unwrap();
+        let mut connection = pool.acquire().await?;
 
         let activity: Activity = sqlx::query_as("delete from activities where id = $1 returning *")
             .bind(id)
