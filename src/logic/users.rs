@@ -5,10 +5,9 @@ use axum::response::IntoResponse;
 use axum::Json;
 use http::StatusCode;
 use sqlx::SqlitePool;
-use crate::database::Error;
 
 pub async fn get_user(
-    State(pool): State<&SqlitePool>,
+    State(pool): State<SqlitePool>,
     Path(username): Path<String>,
 ) -> impl IntoResponse {
     let user = match database::user::get(pool, &username).await {
@@ -21,7 +20,7 @@ pub async fn get_user(
 }
 
 pub async fn get_user_id(
-    State(pool): State<&SqlitePool>,
+    State(pool): State<SqlitePool>,
     Path(user_id): Path<i64>,
 ) -> impl IntoResponse {
     let user = match database::user::get_id(pool, user_id).await {

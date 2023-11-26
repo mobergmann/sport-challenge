@@ -1,5 +1,4 @@
 use crate::account::Account;
-use crate::database::DB_URI;
 use crate::logic::account::{
     delete_account, edit_account, edit_account_password, get_account, post_account,
 };
@@ -17,7 +16,6 @@ use axum_login::axum_sessions::async_session::MemoryStore;
 use axum_login::axum_sessions::{SameSite, SessionLayer};
 use axum_login::{AuthLayer, RequireAuthorizationLayer, SqliteStore};
 use rand::Rng;
-use sqlx::sqlite::SqlitePoolOptions;
 use sqlx::SqlitePool;
 use tower_http::services::ServeDir;
 
@@ -30,7 +28,7 @@ pub async fn frontend_router() -> Router {
     Router::new().nest_service("/", ServeDir::new("public"))
 }
 
-pub async fn backend_router(pool: &SqlitePool) -> Router {
+pub async fn backend_router(pool: SqlitePool) -> Router {
     let secret = rand::thread_rng().gen::<[u8; 64]>(); // todo use secret from environment variable
 
     let session_store = MemoryStore::new();

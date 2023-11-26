@@ -16,11 +16,11 @@ pub async fn get_account(auth: AuthContext) -> impl IntoResponse {
 
 /// Creates a new account and returns the just created account object
 pub async fn post_account(
-    State(pool): State<&SqlitePool>,
+    State(pool): State<SqlitePool>,
     Json(payload): Json<BareAccount>,
 ) -> impl IntoResponse {
     // if username already exists, return with error
-    if database::user::exists(pool, &payload.name).await {
+    if database::user::exists(pool.clone(), &payload.name).await {
         return (StatusCode::CONFLICT).into_response();
     }
 
@@ -36,8 +36,8 @@ pub async fn post_account(
 
 /// Edit the current logged in account
 pub async fn edit_account(
-    State(pool): State<&SqlitePool>,
-    mut auth: AuthContext,
+    State(pool): State<SqlitePool>,
+    auth: AuthContext,
     Json(payload): Json<EditAccount>,
 ) -> impl IntoResponse {
     // todo ask for another password validation
@@ -55,8 +55,8 @@ pub async fn edit_account(
 
 /// Permanently delete the current logged in account
 pub async fn delete_account(
-    State(pool): State<&SqlitePool>,
-    mut auth: AuthContext,
+    State(pool): State<SqlitePool>,
+    auth: AuthContext,
 ) -> impl IntoResponse {
     // todo ask for a password validation
 
@@ -76,8 +76,8 @@ pub async fn delete_account(
 
 /// Change the password of the current logged in account
 pub async fn edit_account_password(
-    State(pool): State<&SqlitePool>,
-    mut auth: AuthContext,
+    State(pool): State<SqlitePool>,
+    auth: AuthContext,
 ) -> impl IntoResponse {
     (StatusCode::NOT_IMPLEMENTED).into_response()
 }

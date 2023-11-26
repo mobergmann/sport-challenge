@@ -12,7 +12,7 @@ use sqlx::SqlitePool;
 type AuthContext = axum_login::extractors::AuthContext<i64, Account, SqliteStore<Account>>;
 
 pub async fn login(
-    State(pool): State<&SqlitePool>,
+    State(pool): State<SqlitePool>,
     mut auth: AuthContext,
     Json(payload): Json<BareAccount>,
 ) -> impl IntoResponse {

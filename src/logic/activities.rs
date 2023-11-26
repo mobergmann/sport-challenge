@@ -1,6 +1,5 @@
 use crate::activity::{BareActivity, StringBareActivity};
 use crate::database;
-use crate::database::Error;
 use crate::logic::AuthContext;
 
 use axum::extract::{Path, State};
@@ -12,7 +11,7 @@ use sqlx::SqlitePool;
 
 /// Returns a single `Activity` by id
 pub async fn get_activity(
-    State(pool): State<&SqlitePool>,
+    State(pool): State<SqlitePool>,
     Path(activity_id): Path<i64>,
 ) -> impl IntoResponse {
     let activity = match database::activity::get(pool, activity_id).await {
@@ -26,7 +25,7 @@ pub async fn get_activity(
 
 /// Returns a list of `Activity` which were started in an time intervall of [:from, :to]
 pub async fn get_activities_from_to(
-    State(pool): State<&SqlitePool>,
+    State(pool): State<SqlitePool>,
     Path((from, to)): Path<(String, String)>,
 ) -> impl IntoResponse {
     // parse the :from parameter as a RFC-3339 DateTime String
@@ -75,8 +74,8 @@ pub async fn get_activities_from_to(
 
 /// Creates a new `Activity` object
 pub async fn post_activity(
-    State(pool): State<&SqlitePool>,
-    mut auth: AuthContext,
+    State(pool): State<SqlitePool>,
+    auth: AuthContext,
     Json(payload): Json<StringBareActivity>,
 ) -> impl IntoResponse {
     let start_time = match DateTime::parse_from_rfc3339(&payload.start_time) {
@@ -130,13 +129,13 @@ pub async fn post_activity(
 
 /// Edits the information of an `Activity` object
 pub async fn edit_activity(
-    State(pool): State<&SqlitePool>,
-    mut auth: AuthContext,
-    Path(activity_id): Path<(i64)>,
+    State(pool): State<SqlitePool>,
+    auth: AuthContext,
+    Path(activity_id): Path<i64>,
     Json(payload): Json<BareActivity>, // todo string bare activity
 ) -> impl IntoResponse {
     // get the referenced activity from the database
-    let activity = match database::activity::get(pool, activity_id).await {
+    let activity = match database::activity::get(pool.clone(), activity_id).await {
         Ok(activity) => activity,
         // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
@@ -161,12 +160,12 @@ pub async fn edit_activity(
 
 /// Deletes an `Activity` object
 pub async fn delete_activity(
-    State(pool): State<&SqlitePool>,
-    mut auth: AuthContext,
-    Path(activity_id): Path<(i64)>,
+    State(pool): State<SqlitePool>,
+    auth: AuthContext,
+    Path(activity_id): Path<i64>,
 ) -> impl IntoResponse {
     // get the referenced activity from the database
-    let activity = match database::activity::get(pool, activity_id).await {
+    let activity = match database::activity::get(pool.clone(), activity_id).await {
         Ok(activity) => activity,
         // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
         // todo catch additional errors
