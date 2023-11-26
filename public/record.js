@@ -1,4 +1,4 @@
-import {new_activity} from "./scripts/requests/activity.js";
+import {create_activity} from "./scripts/requests.js";
 import {TIMEZONE_INTS} from "./scripts/variables.js"
 
 function spawn_timzone(id, parent) {
@@ -56,7 +56,7 @@ document.getElementById("submit").addEventListener("click", async () => {
     let end_time = start_time;
 
     try {
-        let result = await new_activity(amount, activity_type, start_time, end_time);
+        let result = await create_activity(amount, activity_type, start_time, end_time);
         window.location = "/home.html";
     } catch (error) {
         console.error(error);

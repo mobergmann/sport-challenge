@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-In: Sports Challenge</title>
-    <script type="module" src="../scripts/requests/auth.js"></script>
 </head>
 
 <body>
@@ -28,14 +27,14 @@
     </fieldset>
     
     <script type="module">
-        import {login} from "../scripts/requests/auth.js";
+        import {login} from "./../scripts/requests";
 
         document.getElementById("submit").addEventListener("click", async () => {
             const username = document.getElementById("username").value;
-            const password1 = document.getElementById("password").value;
+            const password = document.getElementById("password").value;
             
             try {
-                await login(username, password1);
+                await login(username, password);
                 window.location = "/home.html";
             } catch (_) {
                 alert("SignIn not successful");

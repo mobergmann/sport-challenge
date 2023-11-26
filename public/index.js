@@ -1,8 +1,8 @@
-import {ping} from "./scripts/requests.js"
+import {get_account} from "./scripts/requests.js"
 
 async function main() {
     try {
-        await ping();
+        await get_account();
     } catch (error) {
         return;
     }
@@ -12,7 +12,6 @@ async function main() {
     document.querySelector("#button-sign_in").disabled = true;
     
     document.querySelector("#already_signd_in").style.display = "block";
-    
 }
 
 await main();

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-Up: Sports Challenge</title>
-    <script type="module" src="/scripts/requests/auth.js"></script>
+    <script type="module" src="/scripts/requests.js"></script>
 </head>
 
 <body>
@@ -32,7 +32,7 @@
     </fieldset>
 
     <script type="module">
-        import {sign_up} from "../scripts/requests/auth.js";
+        import {create_account} from "../scripts/requests.js";
         
         document.getElementById("submit").addEventListener("click", async () => {
             const username = document.getElementById("username").value;
@@ -46,7 +46,7 @@
             }
             
             try {
-                await sign_up(username, password1);
+                await create_account(username, password1);
                 window.location = "/auth/sign_in.html";
             } catch (_) {
                 alert("SignUp not successful");
