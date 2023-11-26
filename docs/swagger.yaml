@@ -124,11 +124,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordValidation'
+              $ref: '#/components/schemas/UpdatePassword'
       responses:
         '200':
           description: Successful response
           $ref: '#/components/responses/Account'
+        '403':
+          description: User is not logged in/ Session is not valid
+  '/users/{username}':
+    get:
+      description: Returns the public profile of an User.
+      tags:
+        - users
+      parameters:
+        - name: username
+          description: Username of the User
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          $ref: '#/components/responses/User'
+        '204':
+          description: User with the username does not exist
         '403':
           description: User is not logged in/ Session is not valid
   '/users/id/{id}':
@@ -150,26 +170,6 @@ paths:
           $ref: '#/components/responses/User'
         '204':
           description: User with the id does not exist
-        '403':
-          description: User is not logged in/ Session is not valid
-  '/users/{username}':
-    get:
-      description: Returns the public profile of an User.
-      tags:
-        - users
-      parameters:
-        - name: username
-          description: Username of the User
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful response
-          $ref: '#/components/responses/User'
-        '204':
-          description: User with the username does not exist
         '403':
           description: User is not logged in/ Session is not valid
   /activities:
@@ -352,6 +352,15 @@ components:
     PasswordValidation:
       type: object
       properties:
+        password:
+          type: string
+          format: password
+    UpdatePassword:
+      type: object
+      properties:
+        current_password:
+          type: string
+          format: password
         password:
           type: string
           format: password
