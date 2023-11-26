@@ -1,4 +1,4 @@
-import {new_activity} from "./scripts/activity.js";
+import {new_activity} from "./scripts/requests/activity.js";
 import {TIMEZONE_INTS} from "./scripts/variables.js"
 
 function spawn_timzone(id, parent) {

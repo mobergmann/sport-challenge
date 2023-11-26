@@ -1,5 +1,5 @@
-import {get_activities} from "./scripts/activity.js";
-import {get_user_by_id} from "./scripts/user.js";
+import {get_activities} from "./scripts/requests/activity.js";
+import {get_user_by_id} from "./scripts/requests/user.js";
 import {ping} from "./scripts/requests.js"
 
 /// @source: https://stackoverflow.com/a/31810991/11186407
