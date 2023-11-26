@@ -1,4 +1,4 @@
-import {BASE_AUTH_URL} from "./variables.js";
+import {BASE_ACCOUNT_URL, BASE_AUTH_URL} from "./variables.js";
 
 /// sign up a user
 export async  function sign_up(username, password) {
@@ -7,7 +7,7 @@ export async  function sign_up(username, password) {
         password: password,
     };
 
-    const request = new Request(`${BASE_AUTH_URL}/sign_up`, {
+    const request = new Request(`${BASE_ACCOUNT_URL}`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: new Headers({
@@ -41,7 +41,7 @@ export async  function sign_in(username, password) {
         password: password,
     };
 
-    const request = new Request(`${BASE_AUTH_URL}/sign_in`, {
+    const request = new Request(`${BASE_AUTH_URL}/login`, {
         method: "POST",
         headers: new Headers({
             "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export async  function sign_in(username, password) {
 
 /// sign out a user
 export async function sign_out() {
-    const request = new Request(`${BASE_AUTH_URL}/sign_out`, {
+    const request = new Request(`${BASE_AUTH_URL}/logout`, {
         method: "GET",
         credentials: 'include',
     });

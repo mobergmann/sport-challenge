@@ -46,11 +46,11 @@ pub async fn backend_router(pool: SqlitePool) -> Router {
 
     let account_router = Router::new()
         .route("/v1/account", get(get_account))
-        .route("/v1/account", post(post_account))
         .route("/v1/account", put(edit_account))
         .route("/v1/account", delete(delete_account))
         .route("/v1/account/password", put(edit_account_password))
         .route_layer(RequireAuthorizationLayer::<i64, Account>::login())
+        .route("/v1/account", post(post_account))
         .layer(auth_layer.clone())
         .layer(session_layer.clone());
 
