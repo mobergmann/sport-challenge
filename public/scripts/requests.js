@@ -35,7 +35,7 @@ export async function do_request(request, body_expected = true) {
  * @param password password of the user
  * @returns {Promise<Response>} the user-object of the logged-in user
  */
-export async  function login(username, password) {
+export async function login(username, password) {
     const user = {
         name: username,
         password: password,

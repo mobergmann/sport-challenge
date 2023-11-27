@@ -1,65 +1,5 @@
 import {get_account, get_activities, get_user_by_id} from "./scripts/requests.js";
-
-/// @source: https://stackoverflow.com/a/31810991/11186407
-Date.prototype.getWeek = function() {
-    let onejan = new Date(this.getFullYear(), 0, 1);
-    let today = new Date(this.getFullYear(), this.getMonth(), this.getDate());
-    let dayOfYear = ((today - onejan + 86400000) / 86400000);
-    return Math.ceil(dayOfYear / 7)
-};
-
-/// @source: https://stackoverflow.com/a/5210450/11186407
-Date.prototype.getFirstWeekDay = function() {
-    // strip time away and set date and time to the beginning of the week-day
-    let curr = new Date(this.toDateString());
-    curr.setHours(0);
-    curr.setMinutes(0);
-    curr.setSeconds(0);
-    curr.setMilliseconds(0);
-    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-    return new Date(curr.setDate(first));
-}
-
-/// @source: https://stackoverflow.com/a/5210450/11186407
-Date.prototype.getLastWeekDay = function() {
-    // strip time away and set date and time to the end of the week-day
-    let curr = new Date(this.toDateString());
-    curr.setHours(23);
-    curr.setMinutes(59);
-    curr.setSeconds(59);
-    curr.setMilliseconds(999);
-    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-    let last = first + 6; // last day is the first day + 6
-    return new Date(curr.setDate(last));
-}
-
-/// @source: https://stackoverflow.com/a/5210450/11186407
-Date.prototype.nextWeek = function() {
-    this.setDate(this.getDate() + 7);
-}
-
-/// @source: https://stackoverflow.com/a/5210450/11186407
-Date.prototype.previousWeek = function() {
-    this.setDate(this.getDate() - 7);
-}
-
-Array.prototype.sum = function() {
-    let sum = 0;
-    for (const element of this) {
-        sum += element;
-    }
-    return sum;
-}
-
-Array.prototype.sum = function(key) {
-    let sum = 0;
-    for (const element of this) {
-        sum += element[key];
-    }
-    return sum;
-}
-
-
+import "./scripts/helpers.js";
 
 
 // Global Variables
@@ -269,8 +209,8 @@ async function update_frontend() {
     document.querySelector("#current_year").innerHTML = current_week.getFullYear().toString();
     document.querySelector("#current_week").innerHTML = current_week.getWeek().toString();
 
-    const from = current_week.getFirstWeekDay();
-    const to = current_week.getLastWeekDay();
+    const from = current_week.getFirstWeekDay().toRFC3339();
+    const to = current_week.getLastWeekDay().toRFC3339();
     const activities_per_user = await prepare_activities_data(from, to);
 
     const user_by_id = await prepare_user_by_id(activities_per_user);
