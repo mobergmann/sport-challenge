@@ -1,9 +1,9 @@
-use sqlx::sqlite::{SqliteConnectOptions};
+use sqlx::sqlite::SqliteConnectOptions;
 use sqlx::{Executor, SqlitePool};
 use std::str::FromStr;
 
 /// Path to the SQLite database
-pub const DB_URI: &str = "sqlite://data.db";
+const DB_URI: &str = "sqlite://data.db";
 
 /// Error enum also wrapping sqlx errors
 pub enum Error {
