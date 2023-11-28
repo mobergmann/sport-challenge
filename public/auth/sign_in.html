@@ -34,10 +34,11 @@
             const password = document.getElementById("password").value;
             
             try {
-                await login(username, password);
+                const user = await login(username, password);
                 window.location = "/home.html";
-            } catch (_) {
-                alert("SignIn not successful");
+            } catch (error) {
+                console.error(error);
+                alert("SignIn not successful. Try again");
             }
         });
     </script>

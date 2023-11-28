@@ -5,15 +5,6 @@ export const BASE_AUTH_URL = `${BASE_URL}/auth`;
 export const BASE_ACTIVITIES_URL = `${BASE_URL}/activities`;
 
 
-export async function do_request(request, handler = (res) => {}, error_handler = (error) => {}) {
-    try {
-        const response = await fetch(request);
-        handler(response);
-    } catch (error) {
-        error_handler(error);
-    }
-}
-
 //#region auth
 
 /**
@@ -22,7 +13,8 @@ export async function do_request(request, handler = (res) => {}, error_handler =
  * @param password password of the user
  * @returns {Promise<Response>} the user-object of the logged-in user
  */
-export async function login(username, password) {
+export async function login(username, password)
+{
     const user = {
         name: username,
         password: password,
@@ -37,12 +29,17 @@ export async function login(username, password) {
         credentials: 'include',
     });
 
-    return await do_request(request);
+    try {
+        let response = await fetch(request);
+        return response.json();
+    } catch (error) {
+        return error;
+    }
 }
 
 /**
  * Logout the current session
- * @returns {Promise<Response>} the user-object of the logged-out user
+ * @returns {Promise<void>}
  */
 export async function logout() {
     const request = new Request(`${BASE_AUTH_URL}/logout`, {
@@ -50,7 +47,7 @@ export async function logout() {
         credentials: 'include',
     });
 
-    return await do_request(request);
+    await fetch(request);
 }
 
 //#endregion
@@ -67,7 +64,7 @@ export async function get_account() {
         method: "GET",
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 /**
@@ -90,7 +87,7 @@ export async function create_account(username, password) {
         body: JSON.stringify(user),
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 /**
@@ -112,7 +109,7 @@ export async function update_account(username) {
         body: JSON.stringify(user),
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 /**
@@ -133,7 +130,7 @@ export async function delete_account(new_password) {
         body: JSON.stringify(pw),
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 /**
@@ -154,7 +151,7 @@ export async function update_account_password(current_password, new_password) {
         body: JSON.stringify(pw),
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 //#endregion
@@ -171,7 +168,7 @@ export async function get_user(username) {
         method: "GET",
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 /**
@@ -184,7 +181,7 @@ export async function get_user_by_id(id) {
         method: "GET",
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 //#endregion
@@ -214,7 +211,8 @@ export async function create_activity(amount, activity_type, start_time, end_tim
         }),
         body: JSON.stringify(activity),
     });
-    return await do_request(request);
+
+    return (await fetch(request)).json();
 }
 
 /**
@@ -227,7 +225,7 @@ export async function get_activity(id) {
         method: "GET",
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 /**
@@ -241,7 +239,7 @@ export async function get_activities(from, to) {
         method: "GET",
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 /**
@@ -268,7 +266,8 @@ export async function update_activity(id, amount, activity_type, start_time, end
         }),
         body: JSON.stringify(activity),
     });
-    return await do_request(request);
+
+    return (await fetch(request)).json();
 }
 
 /**
@@ -282,7 +281,7 @@ export async function delete_activity(id) {
         method: "DELETE",
     });
 
-    return await do_request(request);
+    return (await fetch(request)).json();
 }
 
 //#endregion
