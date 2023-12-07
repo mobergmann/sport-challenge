@@ -17,7 +17,7 @@ tags:
   - name: auth
     description: Endpoints for login and logout.
   - name: account
-    description: Endpoint for modifying your personal accound or creating a new account.
+    description: Endpoint for modifying your personal account or creating a new account.
   - name: users
     description: Endpoint for accessing the public profile for other users on the platform.
   - name: activities
