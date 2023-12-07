@@ -4,20 +4,20 @@ info:
   title: Sport Challenge
   contact:
     name: Moritz Bergmann
-    url: https://github.com/mobergmann/sport-challenge
+    url: 'https://github.com/mobergmann/sport-challenge'
   description: >
     API for the Sport Challenge Backend. Can be used to build a frontend from
     the App.
 
 servers:
-  - url: http://0.0.0.0:3000/v1
+  - url: 'http://0.0.0.0:3000/v1'
     description: Your own hosted Server
 
 tags:
   - name: auth
     description: Endpoints for login and logout.
   - name: account
-    description: Endpoint for modifying your personal account or creating a new account.
+    description: Endpoint for modifying your personal accound or creating a new account.
   - name: users
     description: Endpoint for accessing the public profile for other users on the platform.
   - name: activities
@@ -43,8 +43,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
-        '401':
-          description: The username doesn't exist or the password didn't match
+        '403':
+          description: The password didn't match
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: The username doesn't exist
           content:
             application/json:
               schema:
