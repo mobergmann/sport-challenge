@@ -9,6 +9,7 @@ const DB_URI: &str = "sqlite://data.db";
 pub enum Error {
     SQLX(sqlx::Error),
     NotImplemented,
+    Conflict(String),
 }
 
 /// For when an `sqlx::Error` is thrown we can convert it implicitly into an `database::Error`
@@ -34,7 +35,7 @@ pub async fn init() -> Result<SqlitePool, sqlx::Error> {
         .execute(
             "CREATE TABLE IF NOT EXISTS 'users' (
         'id'	INTEGER UNIQUE,
-        'name'	TEXT NOT NULL UNIQUE,
+        'username'	TEXT NOT NULL UNIQUE,
         'password_hash'	TEXT NOT NULL UNIQUE,
         PRIMARY KEY('id' AUTOINCREMENT))",
         )
@@ -68,7 +69,7 @@ pub mod account {
     pub async fn get_id(pool: SqlitePool, id: i64) -> Result<Account, Error> {
         let mut connection = pool.acquire().await?;
 
-        let user: Account = sqlx::query_as("select * from users where id = $1")
+        let user: Account = sqlx::query_as("SELECT * FROM users WHERE id = $1")
             .bind(id)
             .fetch_one(&mut connection)
             .await?;
@@ -80,7 +81,7 @@ pub mod account {
     pub async fn get(pool: SqlitePool, username: &String) -> Result<Account, Error> {
         let mut connection = pool.acquire().await?;
 
-        let user: Account = sqlx::query_as("select * from users where name = $1")
+        let user: Account = sqlx::query_as("SELECT * FROM users WHERE username = $1")
             .bind(username)
             .fetch_one(&mut connection)
             .await?;
@@ -90,17 +91,16 @@ pub mod account {
 
     /// Inserts an Account and returns the inserted account
     pub async fn insert(pool: SqlitePool, account: &BareAccount) -> Result<Account, Error> {
-        let password_hash = hasher::hash(&account.password);
-
         let mut connection = pool.acquire().await?;
 
+        let password_hash = hasher::hash(&account.password);
+
         let user: Account =
-            sqlx::query_as("insert into users (name, password_hash) values ($1, $2) returning *")
-                .bind(&account.name)
+            sqlx::query_as("INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING *")
+                .bind(&account.username)
                 .bind(password_hash)
                 .fetch_one(&mut connection)
-                .await
-                .unwrap();
+                .await?;
 
         Ok(user)
     }
@@ -110,15 +110,50 @@ pub mod account {
         pool: SqlitePool,
         id: i64,
         account: &EditAccount,
-    ) -> Result<Account, Error> {
+    ) -> Result<Account, sqlx::Error> {
         let mut connection = pool.acquire().await?;
-        Err(Error::NotImplemented)
+
+        let result: Account = sqlx::query_as("UPDATE users SET username = $1 WHERE id = $2 RETURNING *")
+            .bind(&account.username)
+            .bind(id)
+            .fetch_one(&mut connection)
+            .await?;
+
+        Ok(result)
+    }
+
+    /// Updates the password of the current account and returns the updated account
+    pub async fn update_password(
+        pool: SqlitePool,
+        id: i64,
+        new_password: String,
+    ) -> Result<Account, sqlx::Error> {
+        let mut connection = pool.acquire().await?;
+
+        let password_hash = hasher::hash(&new_password);
+
+        let user: Account =
+            sqlx::query_as("UPDATE users SET password_hash = $1 WHERE id = $2 RETURNING *")
+                .bind(password_hash)
+                .bind(id)
+                .fetch_one(&mut connection)
+                .await?;
+
+        Ok(user)
     }
 
     /// Deletes an Account and returns the deleted account
     pub async fn delete(pool: SqlitePool, id: i64) -> Result<Account, Error> {
         let mut connection = pool.acquire().await?;
-        Err(Error::NotImplemented)
+
+        // todo can delete return
+        let user: Account =
+            sqlx::query_as("DELETE FROM users WHERE id = $1 RETURNING *")
+                .bind(id)
+                .fetch_one(&mut connection)
+                .await?;
+
+        Ok(user)
     }
 }
 
@@ -131,7 +166,7 @@ pub mod user {
     pub async fn get(pool: SqlitePool, username: &String) -> Result<User, Error> {
         let mut connection = pool.acquire().await?;
 
-        let user: Account = sqlx::query_as("select * from users where name = $1")
+        let user: Account = sqlx::query_as("SELECT * FROM users WHERE username = $1")
             .bind(username.as_str())
             .fetch_one(&mut connection)
             .await?;
@@ -143,7 +178,7 @@ pub mod user {
     pub async fn get_id(pool: SqlitePool, id: i64) -> Result<User, Error> {
         let mut connection = pool.acquire().await?;
 
-        let user: Account = sqlx::query_as("select * from users where id = $1")
+        let user: Account = sqlx::query_as("SELECT * FROM users WHERE id = $1")
             .bind(id)
             .fetch_one(&mut connection)
             .await?;
@@ -151,14 +186,16 @@ pub mod user {
         Ok(From::from(user))
     }
 
-    pub async fn exists(pool: SqlitePool, name: &String) -> bool {
-        let user = get(pool, name).await;
+    /// Checks weather a account/user (given by its username) exists
+    pub async fn exists(pool: SqlitePool, username: &String) -> bool {
+        let user = get(pool, username).await;
         match user {
             Ok(_) => true,
             Err(_) => false,
         }
     }
 
+    /// Checks weather a account/user (given by its is) exists
     pub async fn exists_id(pool: SqlitePool, id: i64) -> bool {
         let user = get_id(pool, id).await;
         match user {
@@ -178,7 +215,7 @@ pub mod activity {
     pub async fn get(pool: SqlitePool, id: i64) -> Result<Activity, Error> {
         let mut connection = pool.acquire().await?;
 
-        let activity: Activity = sqlx::query_as("select * from activities where id = $1")
+        let activity: Activity = sqlx::query_as("SELECT * FROM activities WHERE id = $1")
             .bind(id)
             .fetch_one(&mut connection)
             .await?;
@@ -212,7 +249,7 @@ pub mod activity {
     ) -> Result<Activity, Error> {
         let mut connection = pool.acquire().await?;
 
-        let activity: Activity = sqlx::query_as("insert into activities (author_id, amount, activity_type, start_time, end_time) values ($1, $2, $3, $4, $5) returning *")
+        let activity: Activity = sqlx::query_as("INSERT INTO activities (author_id, amount, activity_type, start_time, end_time) VALUES ($1, $2, $3, $4, $5) RETURNING *")
             .bind(author_id)
             .bind(activity.amount)
             .bind(&activity.activity_type)
@@ -231,14 +268,24 @@ pub mod activity {
         activity: &BareActivity,
     ) -> Result<Activity, Error> {
         let mut connection = pool.acquire().await?;
-        Err(Error::NotImplemented)
+
+        let result: Activity = sqlx::query_as("UPDATE activities SET amount = $1, activity_type = $2, start_time = $3, end_time = $4 WHERE id = $5 RETURNING *")
+            .bind(activity.amount)
+            .bind(&activity.activity_type)
+            .bind(activity.start_time)
+            .bind(activity.end_time)
+            .bind(id)
+            .fetch_one(&mut connection)
+            .await?;
+
+        Ok(result)
     }
 
     /// Deletes an activity and returns the deleted activity
     pub async fn delete(pool: SqlitePool, id: i64) -> Result<Activity, Error> {
         let mut connection = pool.acquire().await?;
 
-        let activity: Activity = sqlx::query_as("delete from activities where id = $1 returning *")
+        let activity: Activity = sqlx::query_as("DELETE FROM activities WHERE id = $1 RETURNING *")
             .bind(id)
             .fetch_one(&mut connection)
             .await?;
