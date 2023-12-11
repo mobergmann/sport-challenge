@@ -70,10 +70,6 @@ paths:
       responses:
         '200':
           description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Account'
   /account:
     get:
       description: Returns the Account object for the current Account/Session.
