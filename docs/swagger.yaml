@@ -457,7 +457,7 @@ components:
     PasswordValidation:
       type: object
       properties:
-        password:
+        current_password:
           type: string
           format: password
     UpdatePassword:
@@ -466,6 +466,6 @@ components:
         current_password:
           type: string
           format: password
-        password:
+        new_password:
           type: string
           format: password
