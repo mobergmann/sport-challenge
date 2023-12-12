@@ -32,7 +32,7 @@ pub struct EditAccount {
 /// Like `Account`, but instead of storing the password hash, it stores the plain-text password.
 /// Is used when the user logs-in or signs-up. !!Should not be used outside of these routes!!
 #[derive(Deserialize)]
-pub struct  BareAccount {
+pub struct BareAccount {
     pub username: String,
     pub password: String,
 }

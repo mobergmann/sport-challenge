@@ -146,7 +146,6 @@ pub mod account {
     pub async fn delete(pool: SqlitePool, id: i64) -> Result<Account, Error> {
         let mut connection = pool.acquire().await?;
 
-        // todo can delete return
         let user: Account =
             sqlx::query_as("DELETE FROM users WHERE id = $1 RETURNING *")
                 .bind(id)

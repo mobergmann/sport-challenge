@@ -8,6 +8,7 @@ use axum::Json;
 use chrono::{DateTime, Utc};
 use http::StatusCode;
 use sqlx::SqlitePool;
+use crate::database::Error;
 
 /// Returns a single `Activity` by id
 pub async fn get_activity(
@@ -16,14 +17,17 @@ pub async fn get_activity(
 ) -> impl IntoResponse {
     let activity = match database::activity::get(pool, activity_id).await {
         Ok(activity) => activity,
-        // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
+        Err(Error::SQLX(e)) => return match e {
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND).into_response(),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
+        },
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
     (StatusCode::OK, Json(activity)).into_response()
 }
 
-/// Returns a list of `Activity` which were started in an time intervall of [:from, :to]
+/// Returns a list of `Activity` which were started in an time interval of [:from, :to]
 pub async fn get_activities_from_to(
     State(pool): State<SqlitePool>,
     Path((from, to)): Path<(String, String)>,
@@ -149,7 +153,7 @@ pub async fn edit_activity(
     }
 
     // update the activity in the database
-    let activity = match database::activity::update(pool, author_id, &payload).await {
+    let activity = match database::activity::update(pool, activity.id, &payload).await {
         Ok(activity) => activity,
         // todo catch additional errors
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),

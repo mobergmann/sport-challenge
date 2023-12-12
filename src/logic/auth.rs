@@ -8,7 +8,6 @@ use axum::response::IntoResponse;
 use axum::Json;
 use axum_login::SqliteStore;
 use sqlx::SqlitePool;
-use crate::database::Error;
 
 type AuthContext = axum_login::extractors::AuthContext<i64, Account, SqliteStore<Account>>;
 

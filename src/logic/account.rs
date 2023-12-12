@@ -2,6 +2,7 @@ use crate::account::{BareAccount, EditAccount};
 use crate::{database, hasher};
 use crate::logic::AuthContext;
 use crate::logic::auth::logout;
+use crate::database::Error;
 
 use axum::extract::State;
 use axum::response::IntoResponse;
@@ -9,17 +10,16 @@ use axum::Json;
 use http::StatusCode;
 use serde::Deserialize;
 use sqlx::SqlitePool;
-use crate::database::Error;
 
 #[derive(Deserialize)]
-struct PasswordValidation {
-    current_password: String,
+pub struct PasswordValidation {
+    pub current_password: String,
 }
 
 #[derive(Deserialize)]
-struct EditPassword {
-    current_password: String,
-    new_password: String,
+pub struct EditPassword {
+    pub current_password: String,
+    pub new_password: String,
 }
 
 /// Returns the current logged in account object
@@ -71,7 +71,7 @@ pub async fn edit_account(
 pub async fn delete_account(
     State(pool): State<SqlitePool>,
     auth: AuthContext,
-    payload: PasswordValidation,
+    Json(payload): Json<PasswordValidation>,
 ) -> impl IntoResponse {
     let account = match database::account::get_id(pool.clone(), auth.clone().current_user.unwrap().id).await {
         Ok(user) => user,
@@ -100,7 +100,7 @@ pub async fn delete_account(
 pub async fn edit_account_password(
     State(pool): State<SqlitePool>,
     auth: AuthContext,
-    payload: EditPassword,
+    Json(payload): Json<EditPassword>,
 ) -> impl IntoResponse {
     let account = match database::account::get_id(pool.clone(), auth.clone().current_user.unwrap().id).await {
         Ok(user) => user,
