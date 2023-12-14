@@ -18,9 +18,9 @@ pub async fn get_activity(
     let activity = match database::activity::get(pool, activity_id).await {
         Ok(activity) => activity,
         Err(Error::SQLX(e)) => return match e {
-            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND).into_response(),
-            _ => (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
-        },
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR),
+        }.into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -36,40 +36,22 @@ pub async fn get_activities_from_to(
     // otherwise return an error
     let from = match DateTime::parse_from_rfc3339(&from) {
         Ok(time) => time.with_timezone(&Utc),
-        Err(_) => {
-            return (
-                StatusCode::BAD_REQUEST,
-                Json(":from url-parameter is not a valid rfc3339 format"),
-            )
-                .into_response();
-        } // todo return error code which is same as axum internal error codes
+        Err(_) => return (StatusCode::BAD_REQUEST, ":from url-parameter is not a valid rfc3339 format").into_response(),
     };
 
     // parse the :to parameter as a RFC-3339 DateTime String
     // otherwise return an error
     let to = match DateTime::parse_from_rfc3339(&to) {
         Ok(time) => time.with_timezone(&Utc),
-        Err(_) => {
-            return (
-                StatusCode::BAD_REQUEST,
-                Json(":to url-parameter is not a valid rfc3339 format"),
-            )
-                .into_response();
-        } // todo return error code which is same as axum internal error codes
+        Err(_) => return (StatusCode::BAD_REQUEST, ":to url-parameter is not a valid rfc3339 format").into_response(),
     };
 
     if to < from {
-        return (
-            StatusCode::BAD_REQUEST,
-            Json("the :to time must be later than the :from time"),
-        )
-            .into_response();
-        // todo return error code which is same as axum internal error codes
+        return (StatusCode::BAD_REQUEST, "the :to time must be later than the :from time").into_response();
     }
 
     let activities = match database::activity::get_interval(pool, &from, &to).await {
         Ok(activities) => activities,
-        // todo catch additional errors
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -84,34 +66,16 @@ pub async fn post_activity(
 ) -> impl IntoResponse {
     let start_time = match DateTime::parse_from_rfc3339(&payload.start_time) {
         Ok(time) => time.with_timezone(&Utc),
-        // todo catch additional errors
-        Err(_) => {
-            return (
-                StatusCode::BAD_REQUEST,
-                Json("start_time is not a valid rfc3339 format"),
-            )
-                .into_response();
-        }
+        Err(_) => return (StatusCode::BAD_REQUEST, ":from url-parameter is not a valid rfc3339 format").into_response(),
     };
 
     let end_time = match DateTime::parse_from_rfc3339(&payload.end_time) {
         Ok(time) => time.with_timezone(&Utc),
-        // todo catch additional errors
-        Err(_) => {
-            return (
-                StatusCode::BAD_REQUEST,
-                Json("end_time is not a valid rfc3339 format"),
-            )
-                .into_response();
-        }
+        Err(_) => return (StatusCode::BAD_REQUEST, ":from url-parameter is not a valid rfc3339 format").into_response(),
     };
 
     if end_time < start_time {
-        return (
-            StatusCode::BAD_REQUEST,
-            Json("the end_time time must be later than the start_time"),
-        )
-            .into_response();
+        return (StatusCode::BAD_REQUEST, "the end_time time must be later than the start_time").into_response();
     }
 
     let author_id = auth.current_user.unwrap().id;
@@ -124,7 +88,6 @@ pub async fn post_activity(
 
     let activity = match database::activity::insert(pool, author_id, &new_activity).await {
         Ok(activity) => activity,
-        // todo catch additional errors
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -141,7 +104,10 @@ pub async fn edit_activity(
     // get the referenced activity from the database
     let activity = match database::activity::get(pool.clone(), activity_id).await {
         Ok(activity) => activity,
-        // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
+        Err(Error::SQLX(e)) => return match e {
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR),
+        }.into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -155,7 +121,6 @@ pub async fn edit_activity(
     // update the activity in the database
     let activity = match database::activity::update(pool, activity.id, &payload).await {
         Ok(activity) => activity,
-        // todo catch additional errors
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -171,8 +136,10 @@ pub async fn delete_activity(
     // get the referenced activity from the database
     let activity = match database::activity::get(pool.clone(), activity_id).await {
         Ok(activity) => activity,
-        // Err(Error::ElementNotFound) => return (StatusCode::NOT_FOUND).into_response(),
-        // todo catch additional errors
+        Err(Error::SQLX(e)) => return match e {
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR),
+        }.into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -186,7 +153,6 @@ pub async fn delete_activity(
     // delete the activity from the database
     let activity = match database::activity::delete(pool, activity_id).await {
         Ok(activity) => activity,
-        // todo catch additional errors
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 

@@ -2,7 +2,6 @@ use crate::account::{BareAccount, EditAccount};
 use crate::{database, hasher};
 use crate::logic::AuthContext;
 use crate::logic::auth::logout;
-use crate::database::Error;
 
 use axum::extract::State;
 use axum::response::IntoResponse;
@@ -52,15 +51,16 @@ pub async fn edit_account(
     auth: AuthContext,
     Json(payload): Json<EditAccount>,
 ) -> impl IntoResponse {
-    // if username already exists, return with error
-    if database::user::exists(pool.clone(), &payload.username).await {
-        return (StatusCode::CONFLICT).into_response();
+    // if username is different from the current user username and the username already exists, return an error
+    if payload.username != auth.current_user.clone().unwrap().username && database::user::exists(pool.clone(), &payload.username).await {
+        return (StatusCode::CONFLICT, "username already exists").into_response();
     }
 
-    // edit the accounts information's from the database
+    // edit the accounts information's in the database
     let updated_user =
         match database::account::update(pool, auth.current_user.unwrap().id, &payload).await {
             Ok(user) => user,
+            Err(sqlx::Error::RowNotFound) => return (StatusCode::CONFLICT).into_response(),
             Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
         };
 
@@ -78,6 +78,7 @@ pub async fn delete_account(
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
+    // verify the current users legitimacy by checking the accounts password
     if !hasher::verify(&account.password_hash, &payload.current_password) {
         return (StatusCode::UNAUTHORIZED).into_response();
     }
@@ -86,7 +87,6 @@ pub async fn delete_account(
     let account =
         match database::account::delete(pool, auth.clone().current_user.unwrap().id).await {
             Ok(user) => user,
-            Err(Error::SQLX(e)) => return (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()).into_response(),
             Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
         };
 
@@ -107,6 +107,7 @@ pub async fn edit_account_password(
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
+    // verify the current users legitimacy by checking the accounts password
     if !hasher::verify(&account.password_hash, &payload.current_password) {
         return (StatusCode::UNAUTHORIZED).into_response();
     }

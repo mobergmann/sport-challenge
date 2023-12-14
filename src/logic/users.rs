@@ -14,9 +14,9 @@ pub async fn get_user(
     let user = match database::user::get(pool, &username).await {
         Ok(user) => user,
         Err(Error::SQLX(e)) => return match e {
-            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND).into_response(),
-            _ => (StatusCode::INTERNAL_SERVER_ERROR).into_response()
-        },
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR),
+        }.into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
@@ -30,9 +30,9 @@ pub async fn get_user_id(
     let user = match database::user::get_id(pool, user_id).await {
         Ok(user) => user,
         Err(Error::SQLX(e)) => return match e {
-            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND).into_response(),
-            _ => (StatusCode::INTERNAL_SERVER_ERROR).into_response()
-        },
+            sqlx::Error::RowNotFound => (StatusCode::NOT_FOUND),
+            _ => (StatusCode::INTERNAL_SERVER_ERROR),
+        }.into_response(),
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
