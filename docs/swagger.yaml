@@ -204,7 +204,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '204':
+        '404':
           description: User with the username does not exist
         '403':
           description: User is not logged in/ Session is not valid
@@ -229,7 +229,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '204':
+        '404':
           description: User with the id does not exist
         '403':
           description: User is not logged in/ Session is not valid
@@ -275,7 +275,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
-        '204':
+        '404':
           description: Activity with the id does not exist
         '403':
           description: User is not logged in/ Session is not valid
@@ -305,7 +305,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
-        '204':
+        '404':
           description: Activity with the id does not exist
         '403':
           description: User is not logged in/ Session is not valid
@@ -329,7 +329,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
-        '204':
+        '404':
           description: Activity with the id does not exist
         '403':
           description: User is not logged in/ Session is not valid
