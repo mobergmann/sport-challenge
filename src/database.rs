@@ -51,7 +51,7 @@ pub async fn init() -> Result<SqlitePool, sqlx::Error> {
     	'amount'	INTEGER NOT NULL,
     	'activity_type'	TEXT NOT NULL,
     	'author_id'	INTEGER NOT NULL,
-    	FOREIGN KEY('author_id') REFERENCES 'users'('id'),
+    	FOREIGN KEY('author_id') REFERENCES 'users'('id') ON DELETE CASCADE,
     	PRIMARY KEY('id' AUTOINCREMENT))",
         )
         .await?;
