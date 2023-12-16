@@ -1,6 +1,6 @@
 import {BASE_ACTIVITIES_URL} from "./main.js";
 
-export const ActivitType = {
+export const gActivitType = {
     PushUps: "PushUps"
 }
 
@@ -38,7 +38,7 @@ export class EditActivity {
 /// :return `Activity` returns a single activity
 export async function get(id) {
     const request = new Request(`${BASE_ACTIVITIES_URL}/${id}`, {
-        method: "POST",
+        method: "GET",
         credentials: 'include',
     });
 
@@ -56,7 +56,7 @@ export async function get(id) {
 /// :return `list[Activity]` returns a list of activites
 export async function get_from_to(from, to) {
     const request = new Request(`${BASE_ACTIVITIES_URL}/${from}/${to}`, {
-        method: "POST",
+        method: "GET",
         credentials: 'include',
     });
 

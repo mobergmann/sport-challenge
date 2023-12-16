@@ -1,4 +1,4 @@
-import {get_account} from "./scripts/requests.js"
+import {get as get_account} from "./api/account.js"
 
 async function main() {
     try {

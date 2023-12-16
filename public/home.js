@@ -1,6 +1,7 @@
-import {get_account, get_activities, get_user_by_id} from "./scripts/requests.js";
 import "./scripts/helpers.js";
-
+import {get as get_account} from "./api/account.js";
+import {get_from_to as get_activities} from "./api/activities.js";
+import {get_id as get_user_id} from "./api/users.js";
 
 // Global Variables
 let current_week = new Date();
@@ -82,7 +83,7 @@ async function prepare_activities_data(from, to) {
 async function prepare_user_by_id(activities_per_user) {
     let user_by_id = new Map();
     for (const [author_id, _] of activities_per_user) {
-        let user = await get_user_by_id(author_id);
+        let user = await get_user_id(author_id);
         user_by_id.set(author_id, user);
     }
     return user_by_id;
