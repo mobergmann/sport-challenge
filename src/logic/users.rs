@@ -1,11 +1,11 @@
 use crate::database;
+use crate::database::Error;
 
 use axum::extract::{Path, State};
 use axum::response::IntoResponse;
 use axum::Json;
 use http::StatusCode;
 use sqlx::SqlitePool;
-use crate::database::Error;
 
 pub async fn get_user(
     State(pool): State<SqlitePool>,
