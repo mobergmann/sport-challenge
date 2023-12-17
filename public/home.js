@@ -1,7 +1,7 @@
-import "./scripts/helpers.js";
-import {get as get_account} from "./api/account.js";
-import {get_from_to as get_activities} from "./api/activities.js";
-import {get_id as get_user_id} from "./api/users.js";
+import "/scripts/helpers.js";
+import {get as get_account} from "/scripts/api/account.js";
+import {get_from_to as get_activities} from "/scripts/api/activities.js";
+import {get_id as get_user_id} from "/scripts/api/users.js";
 
 // Global Variables
 let current_week = new Date();
@@ -225,7 +225,7 @@ async function main() {
         await get_account();
     } catch (error) {
         alert("You are not signed in. Sign in first.");
-        window.location = "/auth/sign_in.html"
+        window.location = "/auth/login.html"
     }
 
     await update_frontend();
