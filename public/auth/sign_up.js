@@ -1,4 +1,4 @@
-import {create as create_account} from "../api/account.js";
+import {create as create_account} from "/scipts/api/account.js";
 
 document.getElementById("submit").addEventListener("click", async () => {
     const username = document.getElementById("username").value;

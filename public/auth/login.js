@@ -1,4 +1,4 @@
-import {login} from "../api/auth.js";
+import {login} from "/scripts/api/auth.js";
 
 document.getElementById("submit").addEventListener("click", async () => {
     const username = document.getElementById("username").value;
