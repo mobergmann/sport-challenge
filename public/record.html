@@ -4,47 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New: Sports Challenge</title>
+    <title>New Activity: Sports Challenge</title>
+    <link rel="stylesheet" href="/style/record.css">
+    <link rel="stylesheet" href="/style/base.css">
 </head>
 
 <body>
-<fieldset>
-    <legend>New Activity</legend>
-    <form>
-        <div>
-            <label for="amount">amount</label>
+<form>
+    <fieldset>
+        <legend>New Activity</legend>
+
+        <div class="container">
+            <label for="amount">Amount</label>
             <input type="number" placeholder="amount" id="amount">
         </div>
 
-        <div>
+        <div class="container">
             <label for="activity_type">Activity Type</label>
             <select id="activity_type">
                 <option value="PushUps">Push-Ups</option>
             </select>
-
         </div>
 
-        <div>
-            <label for="start_time">Start DateTime</label>
-            <input type="datetime-local" id="start_time">
+        <div class="container">
+            <label for="start_time">Start Date and Time</label>
+            <div class="flex-row">
+                <input type="datetime-local" id="start_time">
+                <button type="button" onclick="set_time_now('start_time');" class="button button-secondary" style="width: 5rem">Now</button>
+            </div>
             <div id="start_time-timezone-container"></div>
         </div>
 
-        <!--
-        <div>
-            <label for="end_time">End DateTime</label>
-            <input type="datetime-local" id="end_time">
+        <div class="container">
+            <label for="end_time">End Date and Time</label>
+            <div class="flex-row">
+                <input type="datetime-local" id="end_time">
+                <button type="button" onclick="set_time_now('end_time');" class="button button-secondary" style="width: 5rem">Now</button>
+            </div>
             <div id="end_time-timezone-container"></div>
         </div>
-        -->
 
-        <div>
-            <input type="button" value="Submit" id="submit">
+        <div class="form-buttons-container">
+            <input type="button" value="Submit" id="submit" class="button button-primary mr1">
+            <input type="reset" id="reset" class="button button-danger ml1">
         </div>
-    </form>
-</fieldset>
+    </fieldset>
+</form>
 
-<script type="module" src="/record.js"></script>
+<script type="module" src="./record.js"></script>
 </body>
 
 </html>

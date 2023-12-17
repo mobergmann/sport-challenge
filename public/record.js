@@ -1,5 +1,5 @@
-import {Activity, create as create_activity} from "./api/activities.js";
-import {TIMEZONE_INTS} from "./scripts/helpers.js";
+import {Activity, create as create_activity} from "/scripts/api/activities.js";
+import {TIMEZONE_INTS} from "/scripts/helpers.js";
 
 function spawn_timzone(id, parent) {
 // @source: https://stackoverflow.com/a/52265733/11186407
@@ -18,27 +18,28 @@ function spawn_timzone(id, parent) {
         return select;
     }
 
+    let label = document.createElement("label");
+    label.htmlFor = id;
+    label.innerHTML = "Timezone";
+    parent.appendChild(label);
+
     let select = timezone_dom_select();
     select.id = id;
     select.selectedIndex = 28;
     // todo: automatically select current timezone
     parent.appendChild(select);
-
-    let label = document.createElement("label");
-    label.htmlFor = id;
-    label.innerHTML = "Timezone";
-    parent.appendChild(label);
 }
 
-let now = new Date();
+function set_time_now(html_id) {
+    // set default date to today
+    let now = new Date();
+    document.getElementById(html_id).value = now.toISOString().slice(0,16);
+}
+
+window.set_time_now = set_time_now;
 
 spawn_timzone("start_time-timezone", document.getElementById("start_time-timezone-container"));
-// set default date to today
-document.getElementById("start_time").value = now.toISOString().slice(0,16);
-
-//spawn_timzone("end_time-timezone", document.getElementById("end_time-timezone-container"));
-// set default date to today
-//document.getElementById("end_time").value = now.toISOString().slice(0,16);
+spawn_timzone("end_time-timezone", document.getElementById("end_time-timezone-container"));
 
 document.getElementById("submit").addEventListener("click", async () => {
     const amount = Number(document.getElementById("amount").value);

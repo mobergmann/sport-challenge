@@ -1,0 +1,44 @@
+body {
+    background-color: hsl(0, 0%, 95%);
+
+    /* be responsive */
+    max-width: 30rem;
+
+    /* center vertically and horizontally */
+    margin: auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    width: 100%;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    color: black;
+    background-color: white;
+    border: 1px solid #666;
+    border-radius: 7px;
+}
+
+legend {
+    font-weight: bold;
+}
+
+.form-buttons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin: 1rem;
+}
