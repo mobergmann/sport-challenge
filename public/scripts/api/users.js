@@ -9,7 +9,7 @@ export class User {
 
 /// get the public profile of a user
 /// :param username the username of the user
-///:return `User`
+/// :return `User`
 export async function get(username) {
     const request = new Request(`${BASE_USERS_URL}/${username}`, {
         method: "GET",
@@ -26,9 +26,9 @@ export async function get(username) {
 
 /// get the public profile of a user
 /// :param id id of the user
-///:return `User`
+/// :return `User`
 export async function get_id(id) {
-    const request = new Request(`${BASE_USERS_URL}/${id}`, {
+    const request = new Request(`${BASE_USERS_URL}/id/${id}`, {
         method: "GET",
         credentials: 'include',
     });
