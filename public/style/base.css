@@ -1,6 +1,7 @@
-html {
+html, body {
     font-size: 1rem;
     font-family: sans-serif;
+    background-color: #e9edc9;
 }
 
 .button {
@@ -21,7 +22,7 @@ html {
 
 .button-primary {
     border: none;
-    background-color: hsla(211, 100%, 70%, 1);
+    background-color: #83D6F6;
     color: black;
 }
 
@@ -33,25 +34,25 @@ html {
 
 .button-success {
     border: none;
-    background-color: hsla(120, 100%, 70%, 1);
+    background-color: #8EDCB1;
     color: black;
 }
 
 .button-danger {
     border: none;
-    background-color: hsla(0, 100%, 70%, 1);
+    background-color: #F98B8B;
     color: black;
 }
 
 .button-warning {
     border: none;
-    background-color: hsla(43, 100%, 70%, 1);
+    background-color: #F9DD94;
     color: black;
 }
 
 .button-info {
     border: none;
-    background-color: hsla(229, 100%, 70%, 1);
+    background-color: #94EDF0;
     color: black;
 }
 
