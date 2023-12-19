@@ -6,30 +6,30 @@ export const gActivitType = {
 
 export class Activity {
     constructor(id, author_id, amount, activity_type, start_time, end_time) {
-        self.id = id;
-        self.author_id = author_id;
-        self.amount = amount;
-        self.activity_type = activity_type;
-        self.start_time = start_time;
-        self.end_time = end_time;
+        this.id = id;
+        this.author_id = author_id;
+        this.amount = amount;
+        this.activity_type = activity_type;
+        this.start_time = start_time;
+        this.end_time = end_time;
     }
 }
 
 export class NewActivity {
     constructor(amount, activity_type, start_time, end_time) {
-        self.amount = amount;
-        self.activity_type = activity_type;
-        self.start_time = start_time;
-        self.end_time = end_time;
+        this.amount = amount;
+        this.activity_type = activity_type;
+        this.start_time = start_time;
+        this.end_time = end_time;
     }
 }
 
 export class EditActivity {
     constructor(amount, activity_type, start_time, end_time) {
-        self.amount = amount;
-        self.activity_type = activity_type;
-        self.start_time = start_time;
-        self.end_time = end_time;
+        this.amount = amount;
+        this.activity_type = activity_type;
+        this.start_time = start_time;
+        this.end_time = end_time;
     }
 }
 

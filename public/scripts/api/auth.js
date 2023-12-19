@@ -1,4 +1,5 @@
-import {BASE_AUTH_URL} from "./main.js";
+import {BASE_AUTH_URL, STATUS, Response} from "./main.js";
+import {Account} from "./account.js";
 
 /// login, creation a session and saving the session by setting a cookie
 /// :param username username of the user
@@ -14,11 +15,12 @@ export async function login(username, password) {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let raw = response.json();
+        return new Response(STATUS.OK, new Account(raw));
+    } else {
+        return new Response(STATUS.OK, new Account(raw));
     }
 }
 

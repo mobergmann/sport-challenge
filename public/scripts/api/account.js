@@ -2,35 +2,35 @@ import {BASE_ACCOUNT_URL} from "./main.js"
 
 export class Account {
     constructor(id, username, password_hash) {
-        self.id = id;
-        self.username = username;
-        self.password_hash = password_hash;
+        this.id = id;
+        this.username = username;
+        this.password_hash = password_hash;
     }
 }
 
 export class NewAccount {
     constructor(username, password) {
-        self.username = username;
-        self.password = password;
+        this.username = username;
+        this.password = password;
     }
 }
 
 export class EditAccount {
     constructor(username) {
-        self.username = username;
+        this.username = username;
     }
 }
 
 export class EditPassword {
     constructor(current_password, new_password) {
-        self.current_password = current_password;
-        self.new_password = new_password;
+        this.current_password = current_password;
+        this.new_password = new_password;
     }
 }
 
 export class PasswordValidation {
     constructor(current_password) {
-        self.current_password = current_password;
+        this.current_password = current_password;
     }
 }
 

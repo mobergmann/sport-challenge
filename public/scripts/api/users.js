@@ -1,9 +1,9 @@
-import {BASE_USERS_URL} from "./main.js";
+import {BASE_USERS_URL, Response, STATUS} from "./main.js";
 
 export class User {
     constructor(id, username) {
-        self.id = id;
-        self.username = username;
+        this.id = id;
+        this.username = username;
     }
 }
 
@@ -16,8 +16,17 @@ export async function get(username) {
         credentials: 'include',
     });
 
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let raw = response.body.json();
+        response = new Response(response.status, new User(raw, raw));
+    } else if (response.status === STATUS.CONFLICT) {
+
+    } else if (response.status === STATUS.NOT_FOUND) {
+
+    }
+
     try {
-        let response = await fetch(request);
         return response.json();
     } catch (error) {
         return error;
