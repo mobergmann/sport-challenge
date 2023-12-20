@@ -18,7 +18,7 @@ export async function login(username, password) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let raw = response.json();
-        return new Response(STATUS.OK, new Account(raw));
+        return new Response(STATUS.OK, new Account(id, username, password_hash));
     } else {
         return new Response(STATUS.OK, new Account(raw));
     }

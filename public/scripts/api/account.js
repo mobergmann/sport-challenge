@@ -1,10 +1,14 @@
-import {BASE_ACCOUNT_URL} from "./main.js"
+import {BASE_ACCOUNT_URL, STATUS} from "./main.js"
 
 export class Account {
     constructor(id, username, password_hash) {
         this.id = id;
         this.username = username;
         this.password_hash = password_hash;
+    }
+
+    static from_json(json) {
+        return new Account(json.id, json.username, json.password_hash);
     }
 }
 
@@ -42,11 +46,9 @@ export async function get() {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        return Account.from_json(response.json());
     }
 }
 
