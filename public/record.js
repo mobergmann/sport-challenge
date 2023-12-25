@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import {Activity, create as create_activity} from "/scripts/api/activities.js";
-import {TIMEZONE_INTS} from "/scripts/helpers.js";
-=======
 import {new_activity} from "/scripts/activity.js";
 import {TIMEZONE_INTS} from "/scripts/variables.js";
->>>>>>> main
 
 function spawn_timzone(id, parent) {
 // @source: https://stackoverflow.com/a/52265733/11186407
@@ -57,12 +52,9 @@ window.set_time_now = set_time_now;
 
 spawn_timzone("start_time-timezone", document.getElementById("start_time-timezone-container"));
 spawn_timzone("end_time-timezone", document.getElementById("end_time-timezone-container"));
-<<<<<<< HEAD
-=======
 
 document.querySelector("#form").addEventListener("submit", async (e) => {
     e.preventDefault();
->>>>>>> main
 
     const amount = Number(document.querySelector("#amount").value);
     const activity_type = document.querySelector("#activity_type").value;
