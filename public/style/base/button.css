@@ -1,0 +1,65 @@
+@import url("/style/base/variables.css");
+
+.button {
+    border: none;
+    border-radius: 5px;
+    padding: 0.5em 0.75em;
+    font-size: 1rem;
+    letter-spacing: .1rem;
+    box-sizing: border-box;
+
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.button:hover {
+    filter: brightness(85%);
+}
+
+.button-primary {
+    background-color: var(--primary-color);
+    color: black;
+}
+
+.button-secondary {
+    background-color: var(--secondary-color);
+    color: black;
+}
+
+.button-success {
+    background-color: var(--success-color);
+    color: black;
+}
+
+.button-danger {
+    background-color: var(--danger-color);
+    color: black;
+}
+
+.button-warning {
+    background-color: var(--warning-color);
+    color: black;
+}
+
+.button-info {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.button-light {
+    background-color: var(--light);
+    color: black;
+}
+
+.button-dark {
+    background-color: var(--dark);
+    color: white;
+}
+
+.button-transparent {
+    background-color: transparent;
+}
