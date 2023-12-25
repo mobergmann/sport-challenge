@@ -5,41 +5,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sports Challenge</title>
+
+    <!-- Font Awesome -->
+    <link href="/assets/fontawesome6/css/fontawesome.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/brands.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/solid.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style/base.css">
+
 </head>
 
-<body>
-<header>
-    <h1>Sport Challenge</h1>
-</header>
+<body class="center-horizontally">
 
+<<<<<<< HEAD
 <article>
     <h2>Create a new Account or LogIn</h2>
     <button id="button-sign_up" onclick="location.href = '/auth/sign_up.html';">Sign Up</button>
     <button id="button-sign_in" onclick="location.href = '/auth/login.html';">Sign In</button>
 </article>
+=======
+<main class="main">
+    <header>
+        <h1>Sport Challenge</h1>
+        <p>Motivate yourself to do activities, compare youreself to others for the extra dose of motivation,
+        or just participate in challenges with Sport Challenge.</p>
+    </header>
+>>>>>>> main
 
-<article id="already_signd_in" style="display: none">
-    <h2>You are already loogged in!</h2>
-    <p>You can just open your home. No need to SignUp or SignIn.</p>
-    <button onclick="window.location = '/home.html'">Go to Home</button>
-</article>
+    <article>
+        <div id="already_loggedin" style="display: none">
+            <h2>Go to your Dasboards</h2>
+            <p>You are already loogged in and you can just open your Dasboard!</p>
+            <button onclick="window.location = '/home.html'" class="button button-primary">
+                <i class="fa-solid fa-table-columns"></i>
+                Dashboard
+            </button>
+        </div>
 
-<article>
-    <h2>Disclaimer</h2>
-    <p>This App is not even in pre alpha. All your data may be whiped at any point.<br>
-        Don't rely on this app to store all your data nor to store it securely.</p>
-</article>
+        <h2>Create a new Account</h2>
+        <p>You don't have an account? Create one for free and fulfill your sport-needs or compete against others.</p>
+        <div class="input-group">
+            <button id="button-signup" onclick="location.href = '/auth/sign_up.html';" class="button button-primary">
+                <i class="fa-solid fa-user-plus"></i>
+                Sign Up
+            </button>
+        </div>
 
-<article>
-    <h2>Comare</h2>
-    <p>Challenge yourself by comparing your performance with your friends.</p>
-</article>
+        <h2>Already have an account?</h2>
+        <p>You already have an account, then log in to your account to see your dashboard or add newly done activitiies.</p>
+        <div class="input-group">
+            <button id="button-login" onclick="location.href = '/auth/login.html';" class="button button-primary">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Login
+            </button>
+        </div>
+    </article>
 
-<article>
-    <h2>Keep track</h2>
-    <p>Keep a log of your activities.</p>
-</article>
-
+    <article>
+        <h2>Disclaimer</h2>
+        <p>This App is not even in pre alpha. All your data may be whiped at any point.<br>
+            Don't rely on this app to store all your data nor to store it securely.</p>
+    </article>
+</main>
 <script src="index.js" type="module"></script>
 </body>
 

@@ -3,7 +3,12 @@
 
 # ide's
 .idea/
+<<<<<<< HEAD
 .fleet/
 
 # database
 data.db
+=======
+data.db
+.DS_Store
+>>>>>>> main

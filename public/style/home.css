@@ -1,15 +1,26 @@
-body {
-    max-width: 60rem;
-    margin: auto;
-}
-
 header {
     margin: 1rem;
 }
 
 main {
-    margin: 1rem;
     margin-bottom: 5em; /* space for the add activity button*/
+}
+
+.weekbar {
+    --padding-sides: 1rem;
+
+    width: calc(100% - 2*var(--padding-sides));
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: .5rem var(--padding-sides);
+    position: sticky;
+
+    max-width: 60rem;
+}
+
+.weekbar > button > i {
+    font-size: 2rem;
 }
 
 .week-controls {
@@ -47,10 +58,13 @@ main {
 
 
 .controlls {
+    margin: 1rem;
+    display: flex;
+    justify-content: flex-end;
+}
+.controlls > button {
     position: fixed;
     bottom: 0;
-    right: 0;
-    margin: 1rem;
 }
 
 .logentry {

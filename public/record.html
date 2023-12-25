@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Activity: Sports Challenge</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="/style/base.css">
     <link rel="stylesheet" href="/style/record.css">
 </head>
@@ -17,26 +18,72 @@
         <div class="container">
             <label for="amount">Amount</label>
             <input type="number" placeholder="amount" id="amount">
+=======
+
+    <!-- Font Awesome -->
+    <link href="/assets/fontawesome6/css/fontawesome.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/brands.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/solid.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style/base.css">
+</head>
+
+<body class="center-vertically center-horizontally">
+<main class="main">
+
+    <form action="" id="form">
+        <h1>New Activity</h1>
+
+        <div class="container">
+            <label for="amount">Amount</label>
+            <div class="input-group">
+                <i class="fa-solid fa-hashtag"></i>
+                <input type="number" placeholder="amount" id="amount" class="input">
+            </div>
+>>>>>>> main
         </div>
 
         <div class="container">
             <label for="activity_type">Activity Type</label>
+<<<<<<< HEAD
             <select id="activity_type">
                 <option value="PushUps">Push-Ups</option>
             </select>
+=======
+            <div class="input-group">
+                <i class="fa-solid fa-person-walking"></i>
+                <select id="activity_type" class="input">
+                    <option value="PushUps">Push-Ups</option>
+                </select>
+            </div>
+>>>>>>> main
         </div>
 
         <div class="container">
             <label for="start_time">Start Date and Time</label>
+<<<<<<< HEAD
             <div class="flex-row">
                 <input type="datetime-local" id="start_time">
                 <button type="button" onclick="set_time_now('start_time');" class="button button-secondary" style="width: 5rem">Now</button>
             </div>
             <div id="start_time-timezone-container"></div>
+=======
+            <div class="flex-column container">
+                <div class="input-group">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <input type="datetime-local" id="start_time" class="input">
+                </div>
+                <div id="start_time-timezone-container"></div>
+                <button type="button" onclick="set_time_now('start_time');" class="button button-info">
+                    Now
+                </button>
+            </div>
+>>>>>>> main
         </div>
 
         <div class="container">
             <label for="end_time">End Date and Time</label>
+<<<<<<< HEAD
             <div class="flex-row">
                 <input type="datetime-local" id="end_time">
                 <button type="button" onclick="set_time_now('end_time');" class="button button-secondary" style="width: 5rem">Now</button>
@@ -52,6 +99,35 @@
 </form>
 
 <script type="module" src="./record.js"></script>
+=======
+            <div class="flex-column container">
+                <div class="input-group">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <input type="datetime-local" id="end_time" class="input">
+                </div>
+                <div id="end_time-timezone-container"></div>
+                <button type="button" onclick="set_time_now('end_time');" class="button button-info">
+                    Now
+                </button>
+            </div>
+        </div>
+
+        <div class="form-buttons-container flex-row">
+            <button type="submit" id="submit" class="button button-primary w100">
+                <i class="fa-solid fa-square-plus"></i>
+                Create
+            </button>
+            <button type="reset" class="button button-danger w100">
+                <i class="fa-solid fa-broom"></i>
+                Reset
+            </button>
+        </div>
+    </form>
+
+</main>
+
+<script type="module" src="record.js"></script>
+>>>>>>> main
 </body>
 
 </html>
