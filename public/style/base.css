@@ -1,0 +1,52 @@
+@import url("/style/base/variables.css");
+@import url("/style/base/button.css");
+@import url("/style/base/form.css");
+
+body {
+    font-family: sans-serif;
+    background-color: var(--bg);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    max-width: var(--site-width-full);
+    width: 100%;
+    margin: 0 1rem;
+}
+
+.center-vertically {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.center-horizontally {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    margin-bottom: 1rem;
+}
+
+.flex-row  {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column  {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row * {
+    margin-right: .25rem;
+    margin-left: .25rem;
+}
+
+.w100 {
+    width: 100%;
+}

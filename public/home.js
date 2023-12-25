@@ -1,7 +1,8 @@
-import {get_activities} from "./scripts/activity.js";
-import {get_user_by_id} from "./scripts/user.js";
-import {ping} from "./scripts/requests.js";
-import {getCookie} from "./scripts/helper.js";
+import "/scripts/helper.js";
+import {get_activities} from "/scripts/activity.js";
+import {get_user_by_id} from "/scripts/user.js";
+import {ping} from "/scripts/requests.js";
+
 
 /// @source: https://stackoverflow.com/a/31810991/11186407
 Date.prototype.getWeek = function() {
@@ -19,7 +20,7 @@ Date.prototype.getFirstWeekDay = function() {
     curr.setMinutes(0);
     curr.setSeconds(0);
     curr.setMilliseconds(0);
-    let first = curr.getDate() - curr.getDay() + 1; // First day is the day of the month - the day of the week
+    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
     return new Date(curr.setDate(first));
 }
 
@@ -31,7 +32,7 @@ Date.prototype.getLastWeekDay = function() {
     curr.setMinutes(59);
     curr.setSeconds(59);
     curr.setMilliseconds(999);
-    let first = curr.getDate() - curr.getDay() + 1; // First day is the day of the month - the day of the week
+    let first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
     let last = first + 6; // last day is the first day + 6
     return new Date(curr.setDate(last));
 }
@@ -50,7 +51,28 @@ Date.prototype.dateToHumanReadable = function() {
     return `${this.getDate()}.${this.getMonth() + 1}.${this.getFullYear()}`;
 }
 
+Date.prototype.getTimezoneString = function() {
+    let tz_plus_minus = "";
 
+    let timezone_offset = this.getTimezoneOffset() * (-1);
+    if (timezone_offset >= 0) {
+        tz_plus_minus += "+";
+    } else if (timezone_offset < 0) {
+        tz_plus_minus += "-";
+    }
+
+    let h = Math.trunc(timezone_offset / 60);
+    let m = timezone_offset % 60;
+    return `${tz_plus_minus}${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+}
+
+Date.prototype.toRFC3339 = function() {
+    let iso = this.toISOString();
+    iso = iso.substring(0, iso.length - 1);
+    return `${iso}${this.getTimezoneString()}`;
+}
+
+/// calculates the sums of the elements of the array
 Array.prototype.sum = function() {
     let sum = 0;
     for (const element of this) {
@@ -59,6 +81,7 @@ Array.prototype.sum = function() {
     return sum;
 }
 
+/// calculates the sums of the elements of the array by using the specified key
 Array.prototype.sum = function(key) {
     let sum = 0;
     for (const element of this) {
@@ -66,8 +89,6 @@ Array.prototype.sum = function(key) {
     }
     return sum;
 }
-
-
 
 
 // Global Variables
@@ -159,9 +180,8 @@ async function prepare_user_by_id(activities_per_user) {
 /// display the activities in a chart
 function init_chart(activities_per_user, user_by_id) {
     // display the chart
-    const x_axis_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const x_axis_labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-    let color;
     // prepare for each user the y-Axis
     let activities_per_day = [];
     for (const [author_id, activities] of activities_per_user) {
@@ -169,22 +189,8 @@ function init_chart(activities_per_user, user_by_id) {
         let amounts = [0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < activities.length; ++i) {
             // sum the activity's amount to its corresponding weekday
-            let activity_weekday = activities[i].start_time.getDay();
-
-            if(activity_weekday === 0) {
-                activity_weekday = 6;
-            } else {
-                activity_weekday -= 1;
-            }
-
+            const activity_weekday = activities[i].start_time.getDay();
             amounts[activity_weekday] += activities[i].amount;
-        }
-
-
-        if (getCookie('uid') == author_id) {
-            color = 'Red';
-        } else {
-            color = 'rgb(75, 192, 192)';
         }
 
         activities_per_day.push({
@@ -193,7 +199,7 @@ function init_chart(activities_per_user, user_by_id) {
             data: amounts,
             fill: false,
             // todo: random color
-            borderColor: color,
+            borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
         });
     }
@@ -212,7 +218,7 @@ function init_chart(activities_per_user, user_by_id) {
         label: "Goal",
         data: [140, 140, 140, 140, 140, 140, 140],
         fill: false,
-        borderColor: 'Green',
+        borderColor: 'Red',
         tension: 0.1
     });
 
@@ -220,7 +226,6 @@ function init_chart(activities_per_user, user_by_id) {
     if (global_chart) {
         global_chart.destroy();
     }
-
     // create the chart
     global_chart = new Chart("graph-comparison-canvas", {
         type: "line",
@@ -290,10 +295,11 @@ function init_log(activities_per_user, user_by_id) {
 }
 
 async function update_frontend() {
-    document.querySelector("#current_date").innerHTML = current_week.dateToHumanReadable();
+    document.querySelector("#current_year").innerHTML = current_week.getFullYear().toString();
+    document.querySelector("#current_week").innerHTML = current_week.getWeek().toString();
 
-    const from = current_week.getFirstWeekDay();
-    const to = current_week.getLastWeekDay();
+    const from = current_week.getFirstWeekDay().toRFC3339();
+    const to = current_week.getLastWeekDay().toRFC3339();
     const activities_per_user = await prepare_activities_data(from, to);
 
     const user_by_id = await prepare_user_by_id(activities_per_user);
@@ -307,7 +313,7 @@ async function main() {
         await ping();
     } catch (error) {
         alert("You are not signed in. Sign in first.");
-        window.location = "/auth/sign_in.html"
+        window.location = "/auth/login.html"
     }
 
     await update_frontend();

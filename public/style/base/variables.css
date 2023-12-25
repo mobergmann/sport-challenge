@@ -1,0 +1,35 @@
+:root {
+    color-scheme: light dark;
+    --light: #F5F5F5;
+    --dark: #212121;
+    --site-width-full: 60rem;
+    --site-width-small: 30rem;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --primary-color: #3aad7f;
+        --secondary-color: #a17dfc;
+        --success-color: #43A047;
+        --danger-color: #F4511E;
+        --warning-color: #FDD835;
+        --info-color: #546E7A;
+        
+        --bg: var(--light);
+        --text-color: var(--dark);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #3aad7f;
+        --secondary-color: #a17dfc;
+        --success-color: #66BB6A;
+        --danger-color: #FF7043;
+        --warning-color: #FFEE58;
+        --info-color: #78909C;
+        
+        --bg: var(--dark);
+        --text-color: var(--light);
+    }
+}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign-Up: Sports Challenge</title>
+    <title>Login: Sports Challenge</title>
 
     <!-- Font Awesome -->
     <link href="/assets/fontawesome6/css/fontawesome.css" rel="stylesheet">
@@ -17,8 +17,8 @@
 <body class="center-vertically center-horizontally">
 <main class="main">
 
-    <form action="" id="form" class="form">
-        <h1>Sign Up</h1>
+    <form action="" id="form">
+        <h1>Login</h1>
 
         <div class="container">
             <label for="username">Enter your username</label>
@@ -29,25 +29,17 @@
         </div>
 
         <div class="container">
-            <label for="password1">Enter your password</label>
+            <label for="password">Enter your password</label>
             <div class="input-group">
                 <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="Password" id="password1" class="input">
-            </div>
-        </div>
-
-        <div class="container">
-            <label for="password2">Enter your password again</label>
-            <div class="input-group">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" placeholder="Password" id="password2" class="input">
+                <input type="password" placeholder="Password" id="password" class="input">
             </div>
         </div>
 
         <div class="form-buttons-container flex-row">
             <button type="submit" id="submit" class="button button-primary w100">
-                <i class="fa-solid fa-user-plus"></i>
-                Sign-Up
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Login
             </button>
             <button type="reset" class="button button-danger w100">
                 <i class="fa-solid fa-broom"></i>
@@ -56,9 +48,9 @@
         </div>
     </form>
 
-    <script src="sign_up.js" type="module"></script>
-
 </main>
+
+<script type="module" src="login.js"></script>
 </body>
 
 </html>

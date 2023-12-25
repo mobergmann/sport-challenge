@@ -13,7 +13,7 @@ export async function get_activity(id) {
 }
 
 export async function get_activities(from, to) {
-    const request = new Request(`${BASE_ACTIVITIES_URL}/${from.toISOString()}/${to.toISOString()}`, {
+    const request = new Request(`${BASE_ACTIVITIES_URL}/${from}/${to}`, {
         method: "GET",
     });
 
