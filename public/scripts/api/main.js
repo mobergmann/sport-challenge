@@ -6,6 +6,7 @@ export const BASE_ACTIVITIES_URL = `${BASE_URL}/activities`;
 
 export const STATUS = {
     OK: 200,
+    CREATED: 201,
     UNAUTHORIZED: 401,
     FORBIDDEN: 403,
     NOT_FOUND: 404,
@@ -13,9 +14,9 @@ export const STATUS = {
     INTERNAL_SERVER_ERROR: 500,
 };
 
-export class Response {
-    constructor(status, body) {
-        this.status = status;
-        this.body = body;
+export class Result {
+    constructor(ok, value) {
+        this.ok = ok;
+        this.value = value;
     }
 }

@@ -1,5 +1,5 @@
-import {new_activity} from "/scripts/activity.js";
-import {TIMEZONE_INTS} from "/scripts/variables.js";
+import {create, NewActivity} from "/scripts/api/activities.js";
+import {TIMEZONE_INTS} from "/scripts/helpers.js";
 
 function spawn_timzone(id, parent) {
 // @source: https://stackoverflow.com/a/52265733/11186407
@@ -67,12 +67,12 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
     // todo add timezone to end of string
     console.log(end_time);
 
-    try {
-        const activity = Activity
-        let result = await create_activity(amount, activity_type, start_time, end_time);
+    let activity = new NewActivity(amount, activity_type, start_time, end_time);
+    let res = await create(activity);
+    if (res.ok) {
         window.location = "/home.html";
-    } catch (error) {
-        console.error(error);
-        alert("Error while submitting new activity. Please try again.");
+    } else {
+        console.error(res.value);
+        alert(`Error while submitting new activity: ${res.value}`);
     }
 });

@@ -1,4 +1,4 @@
-import {BASE_USERS_URL, Response, STATUS} from "./main.js";
+import {BASE_USERS_URL, STATUS, Result} from "./main.js";
 
 export class User {
     constructor(id, username) {
@@ -18,18 +18,11 @@ export async function get(username) {
 
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
-        let raw = response.body.json();
-        response = new Response(response.status, new User(raw, raw));
-    } else if (response.status === STATUS.CONFLICT) {
-
-    } else if (response.status === STATUS.NOT_FOUND) {
-
-    }
-
-    try {
-        return response.json();
-    } catch (error) {
-        return error;
+        let value = await response.json();
+        return new Result(true, new User(value.id, value.username));
+    } else {
+        let error = await response.text();
+        return new Result(false, error);
     }
 }
 
@@ -42,10 +35,12 @@ export async function get_id(id) {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let value = await response.json();
+        return new Result(true, new User(value.id, value.username));
+    } else {
+        let error = await response.text();
+        return new Result(false, error);
     }
 }

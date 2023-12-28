@@ -1,7 +1,6 @@
-import {ping} from "/scripts/requests.js"
+import {get} from "/scripts/api/account.js"
 
-try {
-    await ping();
-    document.querySelector("#already_loggedin").style.display = "block";
+let res = await get();
+if (res.ok) {
+    document.querySelector("#dashboard-link").style.display = "block";
 }
-catch (error) {}

@@ -1,4 +1,4 @@
-import {sign_in} from "/scripts/auth.js";
+import {login} from "/scripts/api/auth.js";
 
 document.querySelector("#form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -6,11 +6,11 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
     const username = document.querySelector("#username").value;
     const password = document.querySelector("#password").value;
 
-    try {
-        const user = await sign_in(username, password);
+    const res = await login(username, password);
+    if (res.ok) {
         window.location = "/home.html";
-    } catch (error) {
-        console.error(error);
-        alert("Login not successful. Please try again");
+    } else {
+        console.error(res.value);
+        alert(`Login not successful: ${res.value}`);
     }
 });

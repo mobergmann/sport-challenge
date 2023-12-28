@@ -1,4 +1,4 @@
-import {BASE_AUTH_URL, STATUS, Response} from "./main.js";
+import {BASE_AUTH_URL, STATUS, Result} from "./main.js";
 import {Account} from "./account.js";
 
 /// login, creation a session and saving the session by setting a cookie
@@ -17,10 +17,11 @@ export async function login(username, password) {
 
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
-        let raw = response.json();
-        return new Response(STATUS.OK, new Account(id, username, password_hash));
+        let value = await response.json();
+        return new Result(true, new Account(value.id, value.username, value.password_hash));
     } else {
-        return new Response(STATUS.OK, new Account(raw));
+        let error = await response.text();
+        return new Result(false, error);
     }
 }
 
@@ -31,10 +32,13 @@ export async function logout() {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let value = await response.json();
+        return new Result(true, undefined);
+//        return new Result(true, new Account(value.id, value.username, value.password_hash));
+    } else {
+        let error = await response.text();
+        return new Result(new Result(false, error));
     }
 }

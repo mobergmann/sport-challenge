@@ -1,6 +1,6 @@
-import {BASE_ACTIVITIES_URL} from "./main.js";
+import {BASE_ACTIVITIES_URL, STATUS, Result} from "./main.js";
 
-export const gActivitType = {
+export const ActivitType = {
     PushUps: "PushUps"
 }
 
@@ -42,11 +42,13 @@ export async function get(id) {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let value = await response.json();
+        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+    } else {
+        let error = await response.text();
+        return new Result(false, error);
     }
 }
 
@@ -60,11 +62,17 @@ export async function get_from_to(from, to) {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let raw = await response.json();
+        let activities = [];
+        for (const value of raw) {
+            activities.push(new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+        }
+        return new Result(true, activities);
+    } else {
+        let error = await response.text();
+        return new Result(false, error);
     }
 }
 
@@ -81,11 +89,13 @@ export async function create(activity) {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.CREATED) {
+        let value = await response.json();
+        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+    } else {
+        let error = await response.text();
+        return new Result(false, error);
     }
 }
 
@@ -103,11 +113,13 @@ export async function edit(id, activity) {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let value = await response.json();
+        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+    } else {
+        let error = await response.text();
+        return new Result(false, error);
     }
 }
 
@@ -120,10 +132,12 @@ export async function remove(id) {
         credentials: 'include',
     });
 
-    try {
-        let response = await fetch(request);
-        return response.json();
-    } catch (error) {
-        return error;
+    let response = await fetch(request);
+    if (response.status === STATUS.OK) {
+        let value = await response.json();
+        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+    } else {
+        let error = await response.text();
+        return new Result(false, error);
     }
 }
