@@ -91,7 +91,7 @@ pub async fn post_activity(
         Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR).into_response(),
     };
 
-    (StatusCode::OK, Json(activity)).into_response()
+    (StatusCode::CREATED, Json(activity)).into_response()
 }
 
 /// Edits the information of an `Activity` object
