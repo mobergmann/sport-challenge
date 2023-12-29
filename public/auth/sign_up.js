@@ -1,4 +1,4 @@
-import {sign_up} from "/scripts/auth.js";
+import {NewAccount, create} from "/scripts/api/account.js";
 
 document.querySelector("#form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -12,11 +12,12 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
         return;
     }
 
-    try {
-        const user = await sign_up(username, password1);
+    const account = new NewAccount(username, password1);
+    const res = await create(account);
+    if (res.ok) {
         window.location = "/auth/login.html";
-    } catch (error) {
-        console.error(error);
-        alert("SignUp not successful. Please try again.");
+    } else {
+        console.error(res.value);
+        alert(`SignUp not successful: ${res.value}`);
     }
 });

@@ -1,0 +1,471 @@
+openapi: 3.0.0
+info:
+  version: 0.1.0
+  title: Sport Challenge
+  contact:
+    name: Moritz Bergmann
+    url: 'https://github.com/mobergmann/sport-challenge'
+  description: >
+    API for the Sport Challenge Backend. Can be used to build a frontend from
+    the App.
+
+servers:
+  - url: 'http://0.0.0.0:3000/v1'
+    description: Your own hosted Server
+
+tags:
+  - name: auth
+    description: Endpoints for login and logout.
+  - name: account
+    description: Endpoint for modifying your personal accound or creating a new account.
+  - name: users
+    description: Endpoint for accessing the public profile for other users on the platform.
+  - name: activities
+    description: Endpoint for accessing activities.
+
+paths:
+  /auth/login:
+    post:
+      description: Creates a session for the current user
+      operationId: login
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginAccount'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          description: The password didn't match
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: The username doesn't exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /auth/logout:
+    put:
+      description: Invalidates the users session and therefore logs the user out.
+      operationId: logout
+      tags:
+        - auth
+      responses:
+        '200':
+          description: Successful response
+  /account:
+    get:
+      description: Returns the Account object for the current Account/Session.
+      operationId: getAccount
+      tags:
+        - account
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          description: The current session is not valid
+    post:
+      description: For creating a new account/ Signing Up
+      operationId: sign_up
+      tags:
+        - account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccount'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '409':
+          description: The username or the E-Mail is already taken
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    put:
+      description: >-
+        Edit the properties of the current Account (except the password, which
+        has to be set by a seperate route).
+      operationId: edit_account
+      tags:
+        - account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditAccount'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          description: The current session is not valid
+        '409':
+          description: The username or the E-Mail is already taken
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    delete:
+      description: (Permanently!!!) Delete the current Account.
+      operationId: delete_account
+      tags:
+        - account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordValidation'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '401':
+          description: The current session is not valid
+  /account/password:
+    put:
+      description: Edit the Password of the current Account.
+      operationId: edit_account_password
+      tags:
+        - account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePassword'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '403':
+          description: User is not logged in/ Session is not valid
+  '/users/{username}':
+    get:
+      description: Returns the public profile of an User.
+      operationId: get_user
+      tags:
+        - users
+      parameters:
+        - name: username
+          description: Username of the User
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User with the username does not exist
+        '403':
+          description: User is not logged in/ Session is not valid
+  '/users/id/{id}':
+    get:
+      description: Returns the public profile of an User.
+      operationId: get_user_id
+      tags:
+        - users
+      parameters:
+        - name: id
+          description: ID of the User
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User with the id does not exist
+        '403':
+          description: User is not logged in/ Session is not valid
+  /activities:
+    post:
+      description: Push a new Activity.
+      operationId: create_activity
+      tags:
+        - activities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewActivity'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '403':
+          description: User is not logged in/ Session is not valid
+  '/activities/{id}':
+    get:
+      description: Get an Activity.
+      operationId: get_activity
+      tags:
+        - activities
+      parameters:
+        - name: id
+          description: ID of the activity
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '404':
+          description: Activity with the id does not exist
+        '403':
+          description: User is not logged in/ Session is not valid
+    put:
+      description: Edit an Activity.
+      tags:
+        - activities
+      operationId: edit_activity
+      parameters:
+        - name: id
+          description: ID of the activity
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewActivity'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '404':
+          description: Activity with the id does not exist
+        '403':
+          description: User is not logged in/ Session is not valid
+    delete:
+      description: Delete an Activity.
+      operationId: delete_activity
+      tags:
+        - activities
+      parameters:
+        - name: id
+          description: ID of the activity
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        '404':
+          description: Activity with the id does not exist
+        '403':
+          description: User is not logged in/ Session is not valid
+  '/activities/{from}/{to}':
+    get:
+      description: Get a list of activities in an given time Interval.
+      operationId: get_activities_time_intervall
+      tags:
+        - activities
+      parameters:
+        - name: from
+          description: RFC 3339 Compliant DateTime String
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: to
+          description: RFC 3339 Compliant DateTime String
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '403':
+          description: User is not logged in/ Session is not valid
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        password_hash:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+    LoginAccount:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+    CreateAccount:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+    EditAccount:
+      type: object
+      properties:
+        username:
+          type: string
+    ActivityType:
+      type: string
+      enum:
+        - PushUps
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        author_id:
+          type: integer
+          format: int64
+        amount:
+          type: integer
+          format: int64
+        activity_type:
+          $ref: '#/components/schemas/ActivityType'
+        start_time:
+          type: string
+          format: date
+        end_time:
+          type: string
+          format: date
+    NewActivity:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int64
+        activity_type:
+          $ref: '#/components/schemas/ActivityType'
+        start_time:
+          type: string
+          format: date
+        end_time:
+          type: string
+          format: date
+    PasswordValidation:
+      type: object
+      properties:
+        current_password:
+          type: string
+          format: password
+    UpdatePassword:
+      type: object
+      properties:
+        current_password:
+          type: string
+          format: password
+        new_password:
+          type: string
+          format: password

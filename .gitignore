@@ -1,4 +1,10 @@
+# rust
 /target
+
+# ide's
 .idea/
+.fleet/
+
+# database
 data.db
 .DS_Store
