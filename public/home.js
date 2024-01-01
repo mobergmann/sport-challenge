@@ -1,5 +1,4 @@
 import "/scripts/helper.js";
-import "/scripts/helpers.js"
 import {get_from_to as get_activities} from "/scripts/api/activities.js";
 import {get_id as get_user_by_id} from "/scripts/api/users.js";
 import {get as get_account} from "/scripts/api/account.js";
@@ -97,7 +96,7 @@ async function prepare_user_by_id(activities_per_user) {
 /// display the activities in a chart
 function init_chart(activities_per_user, user_by_id) {
     // display the chart
-    const x_axis_labels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const x_axis_labels = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
     // prepare for each user the y-Axis
     let activities_per_day = [];
@@ -106,7 +105,7 @@ function init_chart(activities_per_user, user_by_id) {
         let amounts = [0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < activities.length; ++i) {
             // sum the activity's amount to its corresponding weekday
-            const activity_weekday = activities[i].start_time.getDay();
+            const activity_weekday = activities[i].start_time.getDayShifted();
             amounts[activity_weekday] += activities[i].amount;
         }
 
@@ -126,7 +125,7 @@ function init_chart(activities_per_user, user_by_id) {
     let y_axis = [];
     for (let dataset of activities_per_day) {
         for (let i = 1; i < dataset.data.length; ++i) {
-            dataset.data[i] = dataset.data[i] + dataset.data[i-1];
+            dataset.data[i] = dataset.data[i] + dataset.data[i - 1];
         }
         y_axis.push(dataset);
     }
@@ -199,7 +198,7 @@ function init_log(activities_per_user, user_by_id) {
         let activity_template = document.querySelector("#template-log-activity");
         for (const activity of activities) {
             const clone = activity_template.content.cloneNode(true);
-            clone.querySelector("#template-log-activity-starttime").value = activity.start_time.toISOString().slice(0,16);
+            clone.querySelector("#template-log-activity-starttime").value = activity.start_time.toISOString().slice(0, 16);
             clone.querySelector("#template-log-activity-duration").innerHTML = activity.end_time - activity.start_time;
             clone.querySelector("#template-log-activity-amount").innerHTML = activity.amount;
 
