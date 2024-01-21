@@ -15,119 +15,95 @@
     <link rel="stylesheet" type="text/css" href="style/home.css">
 </head>
 
-<body class="center-vertically flex-column">
+<body class="center-horizontally">
 
-<header>
-    <h1>Home</h1>
-</header>
+<div class="main">
 
-<aside class="weekbar">
-    <button id="button-load_previous_week" class="button button-transparent">
-        <i class="fa-solid fa-calendar-minus"></i>
-    </button>
+<main class="container challenge">
+    <!--Here will the current week/challenge be displayed-->
+    <h1>Comparison</h1>
 
-    <div>
-        <div>Year:&nbsp;<div id="current_year"></div>
+    <aside class="container week-controller">
+        <button id="button-load_previous_week" class="button button-transparent">
+            <i class="fa-solid fa-calendar-minus"></i>
+        </button>
+
+        <div class="date">
+            <div><b>Year</b>:&nbsp;<div id="current_year"></div>
+            </div>
+            <div><b>Week</b>:&nbsp;<div id="current_week"></div>
+            </div>
         </div>
-        <div>Week:&nbsp;<div id="current_week"></div>
+
+        <button id="button-load_next_week" class="button button-transparent">
+            <i class="fa-solid fa-calendar-plus"></i>
+        </button>
+    </aside>
+
+    <div class="container placements">
+        <!--List of all participants ordered by the amount of their sum of each activities amount-->
+        <div id="ref-placement">
+            <!--Here comes a list of users-->
         </div>
     </div>
 
-    <button id="button-load_next_week" class="button button-transparent">
-        <i class="fa-solid fa-calendar-plus"></i>
+    <div class="container graph">
+        <!--Graph displaynig all participants progress-->
+        <div id="ref-graph">
+            <canvas id="ref-graph-canvas"></canvas>
+        </div>
+    </div>
+</main>
+
+<main class="activities">
+    <h1>Activities</h1>
+    <div id="ref-activities" class="activity"></div>
+</main>
+
+<aside class="controlls">
+    <!--Button for adding a new activity-->
+    <button type="button" onclick="window.location = '/record.html'" class="button button-transparent">
+        <i class="fa-solid fa-person-running" style="font-size: 4rem"></i>
     </button>
 </aside>
 
-<main class="main">
-    <div>
-        <h2>Comparison</h2>
-        <div id="graph-comparison">
-            <canvas id="graph-comparison-canvas" style="width:100%;"></canvas>
+<template id="activity">
+    <div class="container flex-column">
+        <!--Meta information-->
+        <div class="container athlet-info">
+            <div>{{username}}</div>
+            <div>{{activity-type}}</div>
         </div>
 
-        <div>
-            <!-- Here goes the ranking of the first three users and your place via the controller -->
-            <!-- todo: top 3 people -->
-            <!-- todo: you'r place -->
-        </div>
-
-    </div>
-
-    <div>
-        <h2>Log</h2>
-        <!-- Here goes the log of the users via the controller -->
-        <div id="ref-log-list"></div>
-    </div>
-    
-    <aside class="controlls">
-        <button type="button" onclick="window.location = '/record.html'" class="button button-transparent">
-            <i class="fa-solid fa-circle-plus" style="font-size: 4rem"></i>
-        </button>
-    </aside>
-</main>
-
-<template id="template-log">
-    <div class="logentry">
-        <div class="logentry-d1">
-            <div class="logentry-d2">
-                <div class="logentry-place">
-                    #
-                    <div id="template-log-place"></div>
-                </div>
-
-                <div class="logentry-username">
-                    <div id="template-log-username"></div>
+        <!--activitiy data-->
+        <div class="container data">
+            <div class="data">
+                <h2>{{heading}}</h2>
+                <hr/>
+                <div class="flex-row">
+                    <div>{{duration}}</div>
+                    <div>{{distance}}</div>
                 </div>
             </div>
-
-            <div class="logentry-amount">
-                <div id="template-log-amount"></div>
-            </div>
-        </div>
-
-        <div>
-            <button class="log-activities-button-down" id="logentry-i1">
-                <img src="images/down.svg" alt="Show Activities" width="15rem" height="15rem">
-            </button>
-
-            <div class="log-activities" id="logentry-i2">
-                <div id="template-log-activities" style='flex-wrap: wrap;'></div>
-                <!-- Here goes the activities constructed from the template -->
-
-                <button class="log-activities-button-up" id="logentry-i3">
-                    <img src="images/up.svg" alt="Hide Activities" width="15rem" height="15rem">
-                </button>
-            </div>
-
         </div>
     </div>
 </template>
 
-<template id="template-log-activity">
-    <div class="logactivity">
-        <div class="logactivity-starttime logactivity-propertie">
-            <label>
-                Start Time:&nbsp;
-                <input type="datetime-local" id="template-log-activity-starttime" disabled>
-            </label>
+<template id="participant">
+    <div class="container placement flex-row">
+        <div class="rank">{{rank}}</div>
+        <div class="athlet-info">
+            <div class="athlet-name">{{name}}</div>
         </div>
-        <div class="logactivity-duration logactivity-propertie">
-            Duration:&nbsp;
-            <div id="template-log-activity-duration"></div>
-        </div>
-        <div class="logactivity-amount logactivity-propertie">
-            Amount:&nbsp;
-            <div id="template-log-activity-amount"></div>
-        </div>
+        <div class="distance">{{amount}}</div>
     </div>
 </template>
-
-<footer></footer>
 
 <!-- todo: npm -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module" src="home.js"></script>
 
+</div>
 </body>
 
 </html>

@@ -6,26 +6,25 @@ body {
     font-family: sans-serif;
     background-color: var(--bg);
     color: var(--text-color);
+    max-width: var(--site-width-full);
     margin: 0;
     padding: 0;
 }
 
 .main {
-    max-width: var(--site-width-full);
-    width: 100%;
+/*    width: 100%;*/
     margin: 0 1rem;
 }
 
-.center-vertically {
+.center-vertically, .center-y {
     height: 100vh;
     display: flex;
     align-items: center;
 }
 
-.center-horizontally {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
+.center-horizontally, .center-x {
+    margin: auto;
+    width: 100%;
 }
 
 .container {

@@ -1,11 +1,37 @@
-header {
-    margin: 1rem;
+.week-controller {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+}
+.week-controller > button {
+    font-size: 2rem;
 }
 
-main {
-    margin-bottom: 5em; /* space for the add activity button*/
+.date {
+    display: flex;
+    flex-direction: column;
+}
+.date > div {
+    display: flex;
+    flex-direction: row;
 }
 
+
+.placement {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #E9E9E9;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+/*
 .weekbar {
     --padding-sides: 1rem;
 
@@ -131,3 +157,4 @@ main {
 .logactivity-amount {
 
 }
+*/
