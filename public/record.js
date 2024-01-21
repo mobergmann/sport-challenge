@@ -51,7 +51,8 @@ function set_time_now(html_id) {
 window.set_time_now = set_time_now;
 
 spawn_timzone("start_time-timezone", document.getElementById("start_time-timezone-container"));
-spawn_timzone("end_time-timezone", document.getElementById("end_time-timezone-container"));
+set_time_now("start_time");
+
 
 document.querySelector("#form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -59,15 +60,19 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
     const amount = Number(document.querySelector("#amount").value);
     const activity_type = document.querySelector("#activity_type").value;
 
-    let start_time = new Date(document.getElementById("start_time").value).toISOString();
+    let start_time = new Date(document.getElementById("start_time").value);
+    let start_time_str = start_time.toISOString();
     // todo add timezone to end of string
     console.log(start_time);
 
-    let end_time = new Date(document.getElementById("end_time").value).toISOString();
+    let duration = Number(document.getElementById("duration").value);
+    let end_time = new Date(start_time.getTime() + duration*60000);
+    let end_time_str = end_time.toISOString();
+
     // todo add timezone to end of string
     console.log(end_time);
 
-    let activity = new NewActivity(amount, activity_type, start_time, end_time);
+    let activity = new NewActivity(amount, activity_type, start_time_str, end_time_str);
     let res = await create(activity);
     if (res.ok) {
         window.location = "/home.html";
