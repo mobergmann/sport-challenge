@@ -16,17 +16,8 @@
 
 <body class="center-vertically center-horizontally">
 <main class="main">
-
     <form action="" id="form">
         <h1>New Activity</h1>
-
-        <div class="container">
-            <label for="amount">Amount</label>
-            <div class="input-group">
-                <i class="fa-solid fa-hashtag"></i>
-                <input type="number" placeholder="amount" id="amount" class="input">
-            </div>
-        </div>
 
         <div class="container">
             <label for="activity_type">Activity Type</label>
@@ -39,30 +30,32 @@
         </div>
 
         <div class="container">
+            <label for="amount">Distance in km / Repetitions</label>
+            <div class="input-group">
+                <i class="fa-solid fa-hashtag"></i>
+                <input type="number" placeholder="5" id="amount" class="input">
+            </div>
+        </div>
+
+        <div class="container">
             <label for="start_time">Start Date and Time</label>
             <div class="flex-column container">
                 <div class="input-group">
                     <i class="fa-solid fa-calendar-days"></i>
                     <input type="datetime-local" id="start_time" class="input">
+                    <button type="button" onclick="set_time_now('start_time');" class="button button-info">
+                        Now
+                    </button>
                 </div>
                 <div id="start_time-timezone-container"></div>
-                <button type="button" onclick="set_time_now('start_time');" class="button button-info">
-                    Now
-                </button>
             </div>
-        </div>
 
-        <div class="container">
-            <label for="end_time">End Date and Time</label>
             <div class="flex-column container">
+                <label for="duration">Duration in min</label>
                 <div class="input-group">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <input type="datetime-local" id="end_time" class="input">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    <input type="number" placeholder="25" id="duration" class="input" value="0">
                 </div>
-                <div id="end_time-timezone-container"></div>
-                <button type="button" onclick="set_time_now('end_time');" class="button button-info">
-                    Now
-                </button>
             </div>
         </div>
 
