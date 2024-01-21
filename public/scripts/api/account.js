@@ -102,15 +102,15 @@ export async function edit(account) {
 /// :param current_password the accounts current password
 /// :param new_password the new password for the account
 /// :return `Account` updated account
-export async function edit_password(current_password, new_password) {
-    const request = new Request(`${BASE_ACCOUNT_URL}`, {
+export async function edit_password(edit_password) {
+    const request = new Request(`${BASE_ACCOUNT_URL}/password`, {
         method: "PUT",
         headers: new Headers({
             "Content-Type": "application/json",
         }),
         body: JSON.stringify({
-            current_password: current_password,
-            new_password: new_password
+            current_password: edit_password.current_password,
+            new_password: edit_password.new_password
         }),
         credentials: 'include',
     });
