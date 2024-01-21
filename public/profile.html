@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Settings</title>
+
+    <!-- Font Awesome -->
+    <link href="/assets/fontawesome6/css/fontawesome.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/brands.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/solid.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/style/base.css">
+</head>
+
+<body class="center-vertically center-horizontally">
+<main class="main">
+    <h1>Settings</h1>
+
+    <form action="" id="form-account" class="form">
+        <h2>Profile</h2>
+
+        <div class="container">
+            <label for="username">Username</label>
+            <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" placeholder="Username" id="username" class="input">
+            </div>
+        </div>
+
+        <div class="form-buttons-container flex-row">
+            <button type="submit" id="submit-account" class="button button-primary w100">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Update
+            </button>
+            <button type="reset" class="button button-danger w100">
+                <i class="fa-solid fa-broom"></i>
+                Reset
+            </button>
+        </div>
+    </form>
+
+    <form action="" id="form-credential" class="form">
+        <h2>Credentials</h2>
+
+        <div class="container">
+            <label for="current-password">Current Password</label>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="current-password" placeholder="Password" class="input">
+            </div>
+        </div>
+        
+        <div class="container">
+            <label for="new-password1">Password</label>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="new-password1" placeholder="Password" class="input">
+            </div>
+        </div>
+
+        <div class="container">
+            <label for="new-password2">Password</label>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="new-password2" placeholder="Password" class="input">
+            </div>
+        </div>
+
+        <div class="form-buttons-container flex-row">
+            <button type="submit" id="submit-credential" class="button button-primary w100">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Update
+            </button>
+            <button type="reset" class="button button-danger w100">
+                <i class="fa-solid fa-broom"></i>
+                Reset
+            </button>
+        </div>
+    </form>
+
+    <script src="profile.js" type="module"></script>
+</main>
+</body>
+</html>
