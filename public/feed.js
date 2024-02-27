@@ -4,8 +4,6 @@ import {get_from_to as get_activities} from "/scripts/api/activities.js";
 import {get_id as get_user_by_id} from "/scripts/api/users.js";
 import {get as get_account} from "/scripts/api/account.js";
 
-
-
 async function main() {
     let res = await get_account();
     if (!res.ok) {
@@ -33,14 +31,52 @@ async function main() {
         return;
     }
 
+    // prepare the user by id map
+    let user_by_id = new Map();
+    for (const activity of activities.value) {
+        if (user_by_id.has(activity.author_id)) {
+            continue;
+        }
+
+        let user = await get_user_by_id(activity.author_id);
+        if (!user.ok) {
+            alert("Error while fetching Activities:\n" + activities.value);
+        }
+        user_by_id.set(activity.author_id, user.value);
+    }
+
     for (const activity of activities.value) {
         let clone = post_template.content.cloneNode(true);
 
         const athlete_link = `/athletes/${activity.author_id}`;
-        const raw_duration = new Date(activity.end_time) - new Date(activity.start_time);
-        const duration = raw_duration;
+        const author_name = user_by_id.get(activity.author_id).username;
+        let duration = "";
+        {
+            const diff = new Date(activity.end_time) - new Date(activity.start_time);
+            if (diff == 0) {
+                duration = "no duration";
+            }
+            else {
+                const ms = diff % 1000;
+                const ss = Math.floor(diff / 1000) % 60;
+                const mm = Math.floor(diff / 1000 / 60) % 60;
+                const hh = Math.floor(diff / 1000 / 60 / 60);
 
-        clone.querySelector(".post-name").innerHTML = activity.author_id;
+                // append all values after the first non zero value
+                let tmp = [hh, mm, ss, ms];
+                for (let i = 0; i < tmp.length; ++i) {
+                    if (tmp[i] > 0) {
+                        for (let j = i; j < tmp.length; ++j) {
+                            duration += `${String(tmp[j]).padStart(2, '0')}:`;
+                        }
+                        break;
+                    }
+                }
+                duration = duration.substring(0, duration.length - 1); // remove last ':'
+            }
+        }
+
+        clone.querySelector(".post-name").innerHTML = author_name;
         clone.querySelector(".post-athlete-link").href = athlete_link;
         clone.querySelector(".post-activity-type").innerHTML = activity.activity_type;
         clone.querySelector(".post-start-time").innerHTML = activity.start_time;
