@@ -15,7 +15,7 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
     const account = new NewAccount(username, password1);
     const res = await create(account);
     if (res.ok) {
-        window.location = "/auth/login.html";
+        window.location = "/index.html";
     } else {
         console.error(res.value);
         alert(`SignUp not successful: ${res.value}`);

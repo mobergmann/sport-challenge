@@ -25,12 +25,22 @@
     </header>
 
     <article>
-        <div id="dashboard-link" style="display: none">
-            <h2>Go to your Dasboards</h2>
-            <p>You are already loogged in and you can just open your Dasboard!</p>
+        <div class="dashboard-link" style="display: none">
+            <h2>Open Feed</h2>
+            <p>You are already loogged in and you can open your Feed!</p>
+            <button onclick="window.location = '/feed.html'" class="button button-primary">
+                <i class="fa-solid fa-table-columns"></i>
+                Feed
+            </button>
+        </div>
+
+
+        <div class="dashboard-link" style="display: none">
+            <h2>Open Challenges</h2>
+            <p>You are already loogged in and you can open the challenges!</p>
             <button onclick="window.location = '/home.html'" class="button button-primary">
                 <i class="fa-solid fa-table-columns"></i>
-                Dashboard
+                Challenge
             </button>
         </div>
 
