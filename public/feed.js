@@ -57,13 +57,12 @@ async function main() {
                 duration = "no duration";
             }
             else {
-                const ms = diff % 1000;
                 const ss = Math.floor(diff / 1000) % 60;
                 const mm = Math.floor(diff / 1000 / 60) % 60;
                 const hh = Math.floor(diff / 1000 / 60 / 60);
 
                 // append all values after the first non zero value
-                let tmp = [hh, mm, ss, ms];
+                let tmp = [hh, mm, ss];
                 for (let i = 0; i < tmp.length; ++i) {
                     if (tmp[i] > 0) {
                         for (let j = i; j < tmp.length; ++j) {
