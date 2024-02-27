@@ -8,7 +8,7 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
 
     const res = await login(username, password);
     if (res.ok) {
-        window.location = "/home.html";
+        window.location = "/index.html";
     } else {
         console.error(res.value);
         alert(`Login not successful: ${res.value}`);

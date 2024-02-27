@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed: Sports Challenge</title>
+
+    <!-- Font Awesome -->
+    <link href="/assets/fontawesome6/css/fontawesome.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/brands.css" rel="stylesheet">
+    <link href="/assets/fontawesome6/css/solid.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="/style/base.css">
+    <link rel="stylesheet" type="text/css" href="style/feed.css">
+</head>
+
+<body class="center-vertically flex-column">
+
+<header>
+    <h1>Feed</h1>
+    <p>This is your Feed, a collection of the activities of your Sportsfriends.</p>
+</header>
+
+<main class="main">
+    <div class="challenges container" id="challenge-list">
+        <!--Currently we only have one challenge, therefore we statically display one challenge-->
+        <h1><a href="/challenge.html">Weekly PushUps Challenge</a></h1>
+    </div>
+
+    <div class="feed container" id="feed-list">
+    </div>
+</main>
+
+<template id="post-template">
+  <div class="container post">
+      <div class="container">
+          <div><b>Athlet:&nbsp;</b></div>
+          <a class="post-athlete-link"><div class="post-name"></div></a>
+      </div>
+
+      <div class="container">
+          <div><b>Type:&nbsp;</b></div>
+          <div class="post-activity-type"></div>
+      </div>
+
+      <div class="container">
+          <div><b>Start Date and Time:&nbsp;</b></div>
+          <div class="post-start-time"></div>
+      </div>
+
+      <div class="container">
+          <div><b>Duration:&nbsp;</b></div>
+          <div class="post-duration"></div>
+      </div>
+
+      <div class="container">
+          <div><b>Distance:&nbsp;</b></div>
+          <div class="post-distance"></div>
+      </div>
+  </div>
+</template>
+
+<footer></footer>
+
+<!-- todo: npm -->
+<script type="module" src="/feed.js"></script>
+  
+</body>
+
+</html>
