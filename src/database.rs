@@ -10,6 +10,7 @@ pub enum Error {
     SQLX(sqlx::Error),
     NotImplemented,
     Conflict(String),
+    Gone(String)
 }
 
 /// For when an `sqlx::Error` is thrown we can convert it implicitly into an `database::Error`
@@ -56,6 +57,18 @@ pub async fn init() -> Result<SqlitePool, sqlx::Error> {
         )
         .await?;
 
+    // create activities table
+    connection
+        .execute(
+            "CREATE TABLE IF NOT EXISTS 'likes' (
+            'athlete_id' INTEGER,
+            'activity_id' INTEGER,
+            UNIQUE(athlete_id, activity_id),
+            FOREIGN KEY('activity_id') REFERENCES 'activities',
+            FOREIGN KEY('athlete_id') REFERENCES 'users')"
+        )
+        .await?;
+
     Ok(pool)
 }
 
@@ -95,12 +108,13 @@ pub mod account {
 
         let password_hash = hasher::hash(&account.password);
 
-        let user: Account =
-            sqlx::query_as("INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING *")
-                .bind(&account.username)
-                .bind(password_hash)
-                .fetch_one(&mut connection)
-                .await?;
+        let user: Account = sqlx::query_as(
+            "INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING *",
+        )
+        .bind(&account.username)
+        .bind(password_hash)
+        .fetch_one(&mut connection)
+        .await?;
 
         Ok(user)
     }
@@ -113,11 +127,12 @@ pub mod account {
     ) -> Result<Account, sqlx::Error> {
         let mut connection = pool.acquire().await?;
 
-        let result: Account = sqlx::query_as("UPDATE users SET username = $1 WHERE id = $2 RETURNING *")
-            .bind(&account.username)
-            .bind(id)
-            .fetch_one(&mut connection)
-            .await?;
+        let result: Account =
+            sqlx::query_as("UPDATE users SET username = $1 WHERE id = $2 RETURNING *")
+                .bind(&account.username)
+                .bind(id)
+                .fetch_one(&mut connection)
+                .await?;
 
         Ok(result)
     }
@@ -146,11 +161,10 @@ pub mod account {
     pub async fn delete(pool: SqlitePool, id: i64) -> Result<Account, Error> {
         let mut connection = pool.acquire().await?;
 
-        let user: Account =
-            sqlx::query_as("DELETE FROM users WHERE id = $1 RETURNING *")
-                .bind(id)
-                .fetch_one(&mut connection)
-                .await?;
+        let user: Account = sqlx::query_as("DELETE FROM users WHERE id = $1 RETURNING *")
+            .bind(id)
+            .fetch_one(&mut connection)
+            .await?;
 
         Ok(user)
     }
@@ -290,5 +304,63 @@ pub mod activity {
             .await?;
 
         Ok(activity)
+    }
+}
+
+pub mod likes {
+    use crate::database::Error;
+    use crate::like::Like;
+    use sqlx::SqlitePool;
+
+    /// Returns the likes to an post
+    pub async fn get(pool: SqlitePool, activity_id: &i64) -> Result<Vec<Like>, Error> {
+        let mut connection = pool.acquire().await?;
+
+        let likes: Vec<Like> = sqlx::query_as("SELECT * FROM likes WHERE activity_id = $1")
+            .bind(activity_id)
+            .fetch_all(&mut connection)
+            .await?;
+
+        Ok(likes)
+    }
+
+    /// inserts a new like
+    pub async fn insert(
+        pool: SqlitePool,
+        athlete_id: &i64,
+        activity_id: &i64,
+    ) -> Result<Vec<Like>, Error> {
+        let mut connection = pool.acquire().await?;
+
+        let like: Like = sqlx::query_as(
+            "INSERT INTO likes (athlete_id, activity_id) VALUES ($1, $2) RETURNING *",
+        )
+        .bind(athlete_id)
+        .bind(activity_id)
+        .fetch_one(&mut connection)
+        .await?;
+
+        let likes = get(pool, activity_id).await?;
+        Ok(likes)
+    }
+
+    /// removes a like from the database
+    pub async fn delete(
+        pool: SqlitePool,
+        athlete_id: &i64,
+        activity_id: &i64,
+    ) -> Result<Vec<Like>, Error> {
+        let mut connection = pool.acquire().await?;
+
+        let like: Like = sqlx::query_as(
+            "DELETE FROM likes WHERE athlete_id = $1 AND activity_id = $2 RETURNING *",
+        )
+        .bind(athlete_id)
+        .bind(activity_id)
+        .fetch_one(&mut connection)
+        .await?;
+
+        let likes = get(pool, activity_id).await?;
+        Ok(likes)
     }
 }

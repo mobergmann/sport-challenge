@@ -22,6 +22,8 @@ tags:
     description: Endpoint for accessing the public profile for other users on the platform.
   - name: activities
     description: Endpoint for accessing activities.
+  - name: likes
+    description: Endoint for liking activities.
 
 paths:
   /auth/login:
@@ -333,6 +335,90 @@ paths:
           description: Activity with the id does not exist
         '403':
           description: User is not logged in/ Session is not valid
+  '/activities/{id}/likes':
+    get:
+      description: Get the likes of an activity.
+      operationId: get_likes
+      tags:
+        - activities
+        - likes
+      parameters:
+        - name: id
+          description: ID of the activity
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Like'
+        '404':
+          description: Activity with the id does not exist
+        '403':
+          description: User is not logged in/ Session is not valid
+    post:
+      description: Like the post.
+      tags:
+        - activities
+        - likes
+      operationId: like_activity
+      parameters:
+        - name: id
+          description: ID of the activity
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Like'
+        '404':
+          description: Activity with the id does not exist
+        '409':
+          description: Activity was already liked by user
+        '403':
+          description: User is not logged in/ Session is not valid
+    delete:
+      description: Removes the like of an activity.
+      operationId: unlike_activity
+      tags:
+        - activities
+        - likes
+      parameters:
+        - name: id
+          description: ID of the activity
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Like'
+        '404':
+          description: Activity with the id does not exist or activity was not liked by the user
+        '403':
+          description: User is not logged in/ Session is not valid
   '/activities/{from}/{to}':
     get:
       description: Get a list of activities in an given time Interval.
@@ -469,3 +555,12 @@ components:
         new_password:
           type: string
           format: password
+    Like:
+      type: object
+      properties:
+        activity_id:
+          type: integer
+          format: int64
+        athlete_id:
+          type: integer
+          format: int64

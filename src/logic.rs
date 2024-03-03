@@ -2,6 +2,7 @@ pub mod account;
 pub mod activities;
 pub mod auth;
 pub mod users;
+pub mod likes;
 
 use crate::account::Account;
 use axum_login::SqliteStore;

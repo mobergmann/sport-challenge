@@ -4,6 +4,7 @@ mod database;
 mod hasher;
 mod logic;
 mod routes;
+mod like;
 
 use axum::Router;
 
