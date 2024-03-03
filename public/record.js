@@ -75,7 +75,12 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
     let activity = new NewActivity(amount, activity_type, start_time_str, end_time_str);
     let res = await create(activity);
     if (res.ok) {
-        window.location = "/home.html";
+        const urlParams = new URLSearchParams(window.location.search);
+        let target_location = urlParams.get('redirect');
+        if (target_location === null) {
+            target_location = "/index.html";
+        }
+        window.location = target_location;
     } else {
         console.error(res.value);
         alert(`Error while submitting new activity: ${res.value}`);

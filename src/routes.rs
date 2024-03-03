@@ -7,6 +7,7 @@ use crate::logic::activities::{
 };
 use crate::logic::auth::{login, logout};
 use crate::logic::users::{get_user, get_user_id};
+use crate::logic::likes::{get_likes, post_like, delete_like};
 
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
@@ -71,10 +72,19 @@ pub async fn backend_router(pool: SqlitePool) -> Router {
         .layer(auth_layer.clone())
         .layer(session_layer.clone());
 
+    let likes_router = Router::new()
+        .route("/v1/activities/:id/likes", get(get_likes))
+        .route("/v1/activities/:id/likes", post(post_like))
+        .route("/v1/activities/:id/likes", delete(delete_like))
+        .route_layer(RequireAuthorizationLayer::<i64, Account>::login())
+        .layer(auth_layer.clone())
+        .layer(session_layer.clone());
+
     Router::new()
         .merge(auth_router)
         .merge(account_router)
         .merge(users_router)
         .merge(activities_router)
+        .merge(likes_router)
         .with_state(pool)
 }
