@@ -5,8 +5,10 @@ export const ActivitType = {
 }
 
 export class Activity {
-    constructor(id, author_id, amount, activity_type, start_time, end_time) {
+    constructor(id, title, description, author_id, amount, activity_type, start_time, end_time) {
         this.id = id;
+        this.title = title;
+        this.description = description;
         this.author_id = author_id;
         this.amount = amount;
         this.activity_type = activity_type;
@@ -16,7 +18,9 @@ export class Activity {
 }
 
 export class NewActivity {
-    constructor(amount, activity_type, start_time, end_time) {
+    constructor(title, description, amount, activity_type, start_time, end_time) {
+        this.title = title;
+        this.description = description;
         this.amount = amount;
         this.activity_type = activity_type;
         this.start_time = start_time;
@@ -25,7 +29,9 @@ export class NewActivity {
 }
 
 export class EditActivity {
-    constructor(amount, activity_type, start_time, end_time) {
+    constructor(title, description, amount, activity_type, start_time, end_time) {
+        this.title = title;
+        this.description = description;
         this.amount = amount;
         this.activity_type = activity_type;
         this.start_time = start_time;
@@ -45,7 +51,7 @@ export async function get(id) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+        return new Result(true, new Activity(value.id, value.title, value.description, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
     } else {
         let error = await response.text();
         return new Result(false, error);
@@ -67,7 +73,7 @@ export async function get_from_to(from, to) {
         let raw = await response.json();
         let activities = [];
         for (const value of raw) {
-            activities.push(new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+            activities.push(new Activity(value.id, value.title, value.description, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
         }
         return new Result(true, activities);
     } else {
@@ -92,7 +98,7 @@ export async function create(activity) {
     let response = await fetch(request);
     if (response.status === STATUS.CREATED) {
         let value = await response.json();
-        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+        return new Result(true, new Activity(value.id, value.title, value.description, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
     } else {
         let error = await response.text();
         return new Result(false, error);
@@ -116,7 +122,7 @@ export async function edit(id, activity) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+        return new Result(true, new Activity(value.id, value.title, value.description, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
     } else {
         let error = await response.text();
         return new Result(false, error);
@@ -135,7 +141,7 @@ export async function remove(id) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new Activity(value.id, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
+        return new Result(true, new Activity(value.id, value.title, value.description, value.author_id, value.amount, value.activity_type, value.start_time, value.end_time));
     } else {
         let error = await response.text();
         return new Result(false, error);

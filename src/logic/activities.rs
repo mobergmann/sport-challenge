@@ -80,6 +80,8 @@ pub async fn post_activity(
 
     let author_id = auth.current_user.unwrap().id;
     let new_activity = BareActivity {
+        title: payload.title,
+        description: payload.description,
         amount: payload.amount,
         activity_type: payload.activity_type,
         start_time: start_time,

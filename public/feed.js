@@ -142,6 +142,17 @@ async function main() {
             }
         }
 
+        if (activity.title != undefined && activity.title != null && activity.title != "") {
+            clone.querySelector(".post-title").innerHTML = activity.title;
+        } else {
+            clone.querySelector(".post-title").remove();
+        }
+        if (activity.description != undefined && activity.description != null && activity.description != "") {
+            clone.querySelector(".post-description").innerHTML = activity.description;
+        } else {
+            clone.querySelector(".post-description").remove();
+        }
+
         clone.querySelector(".post").id = `${activity.id}`;
         clone.querySelector(".post-name").innerHTML = author_name;
         clone.querySelector(".post-athlete-link").href = athlete_link;

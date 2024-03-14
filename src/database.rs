@@ -35,10 +35,10 @@ pub async fn init() -> Result<SqlitePool, sqlx::Error> {
     connection
         .execute(
             "CREATE TABLE IF NOT EXISTS 'users' (
-        'id'	INTEGER UNIQUE,
-        'username'	TEXT NOT NULL UNIQUE,
-        'password_hash'	TEXT NOT NULL UNIQUE,
-        PRIMARY KEY('id' AUTOINCREMENT))",
+             'id' INTEGER UNIQUE,
+             'username' TEXT NOT NULL UNIQUE,
+             'password_hash' TEXT NOT NULL UNIQUE,
+             PRIMARY KEY('id' AUTOINCREMENT))",
         )
         .await?;
 
@@ -46,14 +46,16 @@ pub async fn init() -> Result<SqlitePool, sqlx::Error> {
     connection
         .execute(
             "CREATE TABLE IF NOT EXISTS 'activities' (
-    	'id'	INTEGER UNIQUE,
-    	'start_time'	TEXT NOT NULL,
-    	'end_time'	TEXT NOT NULL,
-    	'amount'	INTEGER NOT NULL,
-    	'activity_type'	TEXT NOT NULL,
-    	'author_id'	INTEGER NOT NULL,
-    	FOREIGN KEY('author_id') REFERENCES 'users'('id') ON DELETE CASCADE,
-    	PRIMARY KEY('id' AUTOINCREMENT))",
+            'id' INTEGER UNIQUE,
+            'title' TEXT,
+            'description' TEXT,
+            'start_time' TEXT NOT NULL,
+            'end_time' TEXT NOT NULL,
+            'amount' INTEGER NOT NULL,
+            'activity_type' TEXT NOT NULL,
+            'author_id' INTEGER NOT NULL,
+            FOREIGN KEY('author_id') REFERENCES 'users'('id') ON DELETE CASCADE,
+            PRIMARY KEY('id' AUTOINCREMENT))",
         )
         .await?;
 
@@ -262,8 +264,10 @@ pub mod activity {
     ) -> Result<Activity, Error> {
         let mut connection = pool.acquire().await?;
 
-        let activity: Activity = sqlx::query_as("INSERT INTO activities (author_id, amount, activity_type, start_time, end_time) VALUES ($1, $2, $3, $4, $5) RETURNING *")
+        let activity: Activity = sqlx::query_as("INSERT INTO activities (author_id, title, description, amount, activity_type, start_time, end_time) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *")
             .bind(author_id)
+            .bind(&activity.title)
+            .bind(&activity.description)
             .bind(activity.amount)
             .bind(&activity.activity_type)
             .bind(activity.start_time)
@@ -282,7 +286,9 @@ pub mod activity {
     ) -> Result<Activity, Error> {
         let mut connection = pool.acquire().await?;
 
-        let result: Activity = sqlx::query_as("UPDATE activities SET amount = $1, activity_type = $2, start_time = $3, end_time = $4 WHERE id = $5 RETURNING *")
+        let result: Activity = sqlx::query_as("UPDATE activities SET title = $1, description = $2, amount = $3, activity_type = $4, start_time = $5, end_time = $6 WHERE id = $7 RETURNING *")
+            .bind(&activity.title)
+            .bind(&activity.description)
             .bind(activity.amount)
             .bind(&activity.activity_type)
             .bind(activity.start_time)

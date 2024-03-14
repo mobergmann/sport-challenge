@@ -57,6 +57,9 @@ set_time_now("start_time");
 document.querySelector("#form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const title = document.querySelector("#title").value;
+    const description = document.querySelector("#description").value;
+
     const amount = Number(document.querySelector("#amount").value);
     const activity_type = document.querySelector("#activity_type").value;
 
@@ -72,7 +75,7 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
     // todo add timezone to end of string
     console.log(end_time);
 
-    let activity = new NewActivity(amount, activity_type, start_time_str, end_time_str);
+    let activity = new NewActivity(title, description, amount, activity_type, start_time_str, end_time_str);
     let res = await create(activity);
     if (res.ok) {
         const urlParams = new URLSearchParams(window.location.search);

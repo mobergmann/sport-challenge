@@ -3,3 +3,7 @@
     padding: 1rem;
     border: solid 1px black;
 }
+
+.post-title {
+    margin-bottom: 0rem;
+}

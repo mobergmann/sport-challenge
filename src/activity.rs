@@ -11,6 +11,8 @@ pub enum ActivityType {
 pub struct Activity {
     pub id: i64,
     pub author_id: i64,
+    pub title: String,
+    pub description: String,
     pub amount: i64,
     pub activity_type: ActivityType,
     pub start_time: DateTime<Utc>,
@@ -19,6 +21,8 @@ pub struct Activity {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct BareActivity {
+    pub title: String,
+    pub description: String,
     pub amount: i64,
     pub activity_type: ActivityType,
     pub start_time: DateTime<Utc>,
@@ -27,6 +31,8 @@ pub struct BareActivity {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct StringBareActivity {
+    pub title: String,
+    pub description: String,
     pub amount: i64,
     pub activity_type: ActivityType,
     pub start_time: String,
