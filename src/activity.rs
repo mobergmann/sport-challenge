@@ -4,6 +4,8 @@ use sqlx::{Decode, FromRow};
 
 #[derive(Clone, Debug, Deserialize, Serialize, sqlx::Type)]
 pub enum ActivityType {
+    Running,
+    Bicycling,
     PushUps,
 }
 

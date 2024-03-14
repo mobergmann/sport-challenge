@@ -1,7 +1,9 @@
 import {BASE_ACTIVITIES_URL, STATUS, Result} from "./main.js";
 
 export const ActivitType = {
-    PushUps: "PushUps"
+    PushUps: "PushUps",
+    Bicycling: "Bicycling",
+    Runngin: "Running",
 }
 
 export class Activity {
