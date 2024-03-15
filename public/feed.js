@@ -116,7 +116,7 @@ async function main() {
         let clone = post_template.content.cloneNode(true);
 
         const athlete_link = `/athletes/${activity.author_id}`;
-        const author_name = user_by_id.get(activity.author_id).username;
+        const author = user_by_id.get(activity.author_id);
         let duration = "";
         {
             const diff = new Date(activity.end_time) - new Date(activity.start_time);
@@ -154,7 +154,8 @@ async function main() {
         }
 
         clone.querySelector(".post").id = `${activity.id}`;
-        clone.querySelector(".post-name").innerHTML = author_name;
+        clone.querySelector(".post-username").innerHTML = author.username;
+        clone.querySelector(".post-display-name").innerHTML = author.display_name;
         clone.querySelector(".post-athlete-link").href = athlete_link;
         clone.querySelector(".post-activity-type").innerHTML = activity.activity_type;
         clone.querySelector(".post-start-time").innerHTML = activity.start_time;

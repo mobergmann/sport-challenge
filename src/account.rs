@@ -10,6 +10,7 @@ use std::convert::Into;
 pub struct Account {
     pub id: i64,
     pub username: String,
+    pub display_name: String,
     pub password_hash: String,
 }
 
@@ -27,12 +28,22 @@ impl AuthUser<i64> for Account {
 #[derive(Deserialize)]
 pub struct EditAccount {
     pub username: String,
+    pub display_name: String,
 }
 
 /// Like `Account`, but instead of storing the password hash, it stores the plain-text password.
 /// Is used when the user logs-in or signs-up. !!Should not be used outside of these routes!!
 #[derive(Deserialize)]
 pub struct BareAccount {
+    pub username: String,
+    pub display_name: String,
+    pub password: String,
+}
+
+/// Like `Account`, but instead of storing the password hash, it stores the plain-text password.
+/// Is used when the user logs-in or signs-up. !!Should not be used outside of these routes!!
+#[derive(Deserialize)]
+pub struct LoginAccount {
     pub username: String,
     pub password: String,
 }
@@ -43,6 +54,7 @@ pub struct BareAccount {
 pub struct User {
     pub id: i64,
     pub username: String,
+    pub display_name: String,
 }
 
 /// Because a `User` is a subset of the `Account` we can convert any `Account` into a `User`.
@@ -51,6 +63,7 @@ impl From<Account> for User {
         Self {
             id: user.id,
             username: user.username,
+            display_name: user.display_name,
         }
     }
 }

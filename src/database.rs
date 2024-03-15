@@ -37,6 +37,7 @@ pub async fn init() -> Result<SqlitePool, sqlx::Error> {
             "CREATE TABLE IF NOT EXISTS 'users' (
              'id' INTEGER UNIQUE,
              'username' TEXT NOT NULL UNIQUE,
+             'display_name' TEXT NOT NULL,
              'password_hash' TEXT NOT NULL UNIQUE,
              PRIMARY KEY('id' AUTOINCREMENT))",
         )
@@ -111,9 +112,10 @@ pub mod account {
         let password_hash = hasher::hash(&account.password);
 
         let user: Account = sqlx::query_as(
-            "INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING *",
+            "INSERT INTO users (username, display_name, password_hash) VALUES ($1, $2, $3) RETURNING *",
         )
         .bind(&account.username)
+        .bind(&account.display_name)
         .bind(password_hash)
         .fetch_one(&mut connection)
         .await?;
@@ -130,8 +132,9 @@ pub mod account {
         let mut connection = pool.acquire().await?;
 
         let result: Account =
-            sqlx::query_as("UPDATE users SET username = $1 WHERE id = $2 RETURNING *")
+            sqlx::query_as("UPDATE users SET username = $1, display_name = $2 WHERE id = $3 RETURNING *")
                 .bind(&account.username)
+                .bind(&account.display_name)
                 .bind(id)
                 .fetch_one(&mut connection)
                 .await?;
@@ -210,7 +213,7 @@ pub mod user {
         }
     }
 
-    /// Checks weather a account/user (given by its is) exists
+    /// Checks weather a account/user (given by its id) exists
     pub async fn exists_id(pool: SqlitePool, id: i64) -> bool {
         let user = get_id(pool, id).await;
         match user {
