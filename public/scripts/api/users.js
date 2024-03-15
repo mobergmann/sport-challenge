@@ -1,9 +1,10 @@
 import {BASE_USERS_URL, STATUS, Result} from "./main.js";
 
 export class User {
-    constructor(id, username) {
+    constructor(id, username, display_name) {
         this.id = id;
         this.username = username;
+        this.display_name = display_name;
     }
 }
 
@@ -19,7 +20,7 @@ export async function get(username) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new User(value.id, value.username));
+        return new Result(true, new User(value.id, value.username, value.display_name));
     } else {
         let error = await response.text();
         return new Result(false, error);
@@ -38,7 +39,7 @@ export async function get_id(id) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new User(value.id, value.username));
+        return new Result(true, new User(value.id, value.username, value.display_name));
     } else {
         let error = await response.text();
         return new Result(false, error);

@@ -4,6 +4,7 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const username = document.querySelector("#username").value;
+    const display_name = document.querySelector("#display-name").value;
     const password1 = document.querySelector("#password1").value;
     const password2 = document.querySelector("#password2").value;
 
@@ -12,7 +13,7 @@ document.querySelector("#form").addEventListener("submit", async (e) => {
         return;
     }
 
-    const account = new NewAccount(username, password1);
+    const account = new NewAccount(username, display_name, password1);
     const res = await create(account);
     if (res.ok) {
         window.location = "/index.html";

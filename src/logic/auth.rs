@@ -1,4 +1,4 @@
-use crate::account::{Account, BareAccount};
+use crate::account::{Account, LoginAccount};
 use crate::database;
 use crate::hasher;
 
@@ -14,7 +14,7 @@ type AuthContext = axum_login::extractors::AuthContext<i64, Account, SqliteStore
 pub async fn login(
     State(pool): State<SqlitePool>,
     mut auth: AuthContext,
-    Json(payload): Json<BareAccount>,
+    Json(payload): Json<LoginAccount>,
 ) -> impl IntoResponse {
     let user = match database::account::get(pool, &payload.username).await {
         Ok(user) => user,

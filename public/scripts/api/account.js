@@ -1,23 +1,26 @@
 import {BASE_ACCOUNT_URL, STATUS, Result} from "./main.js"
 
 export class Account {
-    constructor(id, username, password_hash) {
+    constructor(id, username, display_name, password_hash) {
         this.id = id;
         this.username = username;
+        this.display_name = display_name;
         this.password_hash = password_hash;
     }
 }
 
 export class NewAccount {
-    constructor(username, password) {
+    constructor(username, display_name, password) {
         this.username = username;
+        this.display_name = display_name;
         this.password = password;
     }
 }
 
 export class EditAccount {
-    constructor(username) {
+    constructor(username, display_name) {
         this.username = username;
+        this.display_name = display_name;
     }
 }
 
@@ -45,7 +48,7 @@ export async function get() {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new Account(value.id, value.username, value.password_hash));
+        return new Result(true, new Account(value.id, value.username, value.display_name, value.password_hash));
     } else {
         let error = await response.text();
         return new Result(false, error);
@@ -68,7 +71,7 @@ export async function create(account) {
     let response = await fetch(request);
     if (response.status === STATUS.CREATED) {
         let value = await response.json();
-        return new Result(true, new Account(value.id, value.username, value.password_hash));
+        return new Result(true, new Account(value.id, value.username, value.display_name, value.password_hash));
     } else {
         let error = await response.text();
         return new Result(false, error);
@@ -91,7 +94,7 @@ export async function edit(account) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new Account(value.id, value.username, value.password_hash));
+        return new Result(true, new Account(value.id, value.username, value.display_name, value.password_hash));
     } else {
         let error = await response.text();
         return new Result(false, error);
@@ -141,7 +144,7 @@ export async function remove(current_password) {
     let response = await fetch(request);
     if (response.status === STATUS.OK) {
         let value = await response.json();
-        return new Result(true, new Account(value.id, value.username, value.password_hash));
+        return new Result(true, new Account(value.id, value.username, value.display_name, value.password_hash));
     } else {
         let error = await response.text();
         return new Result(false, error);
